@@ -20,4 +20,6 @@ NCCL_TREE_THRESHOLD=0 deepspeed ${base_dir}/deepspeed_train.py \
 --job_name $JOB_NAME \
 --deepspeed_config ${base_dir}/deepspeed_bsz64k_lamb_config_seq128.json \
 --data_path_prefix /data/bert \
+--validation_data_path_prefix /data/bert \
+--ckpt_to_save 180
 &> ${JOB_NAME}.log

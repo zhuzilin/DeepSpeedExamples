@@ -84,6 +84,12 @@ def get_dataloader(args, dataset: Dataset, eval_set=False):
 def pretrain_validation(args, index, model):
     if args.validation_data_path_prefix is None:
         return
+    seq512 = True if args.max_seq_length == 512 else False
+    if not seq512:
+        tmp_max_seq_length = args.max_seq_length
+        args.max_seq_length = 512
+        tmp_train_micro_batch_size_per_gpu = args.train_micro_batch_size_per_gpu
+        args.train_micro_batch_size_per_gpu = args.train_micro_batch_size_per_gpu // 4
 
     config = args.config
     logger = args.logger
@@ -135,6 +141,9 @@ def pretrain_validation(args, index, model):
                                           and args.local_rank == -1):
         args.summary_writer.add_scalar(f'Validation/Loss', eval_loss,
                                        index + 1)
+    if not seq512:
+        args.max_seq_length = tmp_max_seq_length
+        args.train_micro_batch_size_per_gpu = tmp_train_micro_batch_size_per_gpu
     return
 
 
@@ -220,7 +229,8 @@ def train(args,
     global_data_samples = current_data_sample_count
 
     # Run Validation Loss
-    if not finetune and args.max_seq_length == 512:
+    #if not finetune and args.max_seq_length == 512:
+    if not finetune:
         pretrain_validation(args, index, model)
 
 
