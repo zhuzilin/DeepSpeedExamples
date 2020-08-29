@@ -101,6 +101,8 @@ def pretrain_validation(args, index, model):
     data_batches = get_dataloader(args, dataset, eval_set=True)
     eval_loss = 0
     nb_eval_steps = 0
+    eval_loss_split = 0
+    nb_eval_steps_split = 0
     for batch in tqdm(data_batches):
         batch = tuple(t.to(args.device) for t in batch)
         tmp_eval_loss = model.network(batch, log=False)
@@ -109,8 +111,25 @@ def pretrain_validation(args, index, model):
         tmp_eval_loss = tmp_eval_loss / dist.get_world_size()
         eval_loss += tmp_eval_loss.mean().item()
         nb_eval_steps += 1
+
+        for i in range(batch[0].size()[0]):
+            batch_slice = []
+            for j in range(len(batch)):
+                shape_1 = batch[j].size()[1]
+                batch_slice.append(batch[j][i].reshape(1, shape_1))
+            batch_slice = tuple(t.to(args.device) for t in batch_slice)
+            tmp_eval_loss_slice = model.network(batch_slice, log=False)
+            dist.reduce(tmp_eval_loss_slice, 0)
+            tmp_eval_loss_slice = tmp_eval_loss_slice / dist.get_world_size()
+            eval_loss_split += tmp_eval_loss_slice.mean().item()
+            nb_eval_steps_split += 1
+
     eval_loss = eval_loss / nb_eval_steps
     logger.info(f"Validation Loss for epoch {index + 1} is: {eval_loss}")
+    eval_loss_split = eval_loss_split / nb_eval_steps_split
+    logger.info(
+        f"Validation Loss split for epoch {index + 1} is: {eval_loss_split}")
+
     if (not args.no_cuda
             and dist.get_rank() == 0) or (args.no_cuda
                                           and args.local_rank == -1):
