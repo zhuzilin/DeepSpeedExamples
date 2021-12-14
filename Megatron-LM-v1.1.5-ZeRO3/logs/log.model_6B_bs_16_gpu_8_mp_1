@@ -1,0 +1,759 @@
+MODEL SIZE 6 MP_SIZE 2 NUM_GPUS_PER_WORKER 8
+deepspeed --num_nodes 1 --num_gpus 8 pretrain_gpt2.py --model-parallel-size 2 --num-layers 53 --hidden-size 3072 --num-attention-heads 16 --seq-length 1024 --max-position-embeddings 1024 --batch-size 16 --train-iters 32 --lr-decay-iters 320000 --save checkpoints/gpt2_345m_ds --load checkpoints/gpt2_345m_ds --data-path /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document --vocab-file /workspace/GPT_data/bpe/gpt2-vocab.json --merge-file /workspace/GPT_data/bpe/gpt2-merges.txt --data-impl mmap --split 949,50,1 --distributed-backend nccl --lr 1.5e-4 --lr-decay-style cosine --min-lr 1.0e-5 --weight-decay 1e-2 --clip-grad 1.0 --warmup 0.01 --checkpoint-activations --log-interval 1 --save-interval 10000 --eval-interval 2000 --eval-iters 1 --fp16 --scattered-embeddings --split-transformers --deepspeed --deepspeed_config /workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json --zero-stage 3 --zero-reduce-bucket-size 50000000 --zero-allgather-bucket-size 5000000000 --zero-contigious-gradients --zero-reduce-scatter --deepspeed-activation-checkpointing --checkpoint-num-layers 1 --partition-activations --checkpoint-in-cpu --synchronize-each-layer --contigious-checkpointing
+[2021-11-26 08:24:36,231] [WARNING] [runner.py:132:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+[2021-11-26 08:24:36,837] [INFO] [runner.py:398:main] cmd = /opt/conda/bin/python3.8 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMiwgMywgNCwgNSwgNiwgN119 --master_addr=127.0.0.1 --master_port=29500 pretrain_gpt2.py --model-parallel-size 2 --num-layers 53 --hidden-size 3072 --num-attention-heads 16 --seq-length 1024 --max-position-embeddings 1024 --batch-size 16 --train-iters 32 --lr-decay-iters 320000 --save checkpoints/gpt2_345m_ds --load checkpoints/gpt2_345m_ds --data-path /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document --vocab-file /workspace/GPT_data/bpe/gpt2-vocab.json --merge-file /workspace/GPT_data/bpe/gpt2-merges.txt --data-impl mmap --split 949,50,1 --distributed-backend nccl --lr 1.5e-4 --lr-decay-style cosine --min-lr 1.0e-5 --weight-decay 1e-2 --clip-grad 1.0 --warmup 0.01 --checkpoint-activations --log-interval 1 --save-interval 10000 --eval-interval 2000 --eval-iters 1 --fp16 --scattered-embeddings --split-transformers --deepspeed --deepspeed_config /workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json --zero-stage 3 --zero-reduce-bucket-size 50000000 --zero-allgather-bucket-size 5000000000 --zero-contigious-gradients --zero-reduce-scatter --deepspeed-activation-checkpointing --checkpoint-num-layers 1 --partition-activations --checkpoint-in-cpu --synchronize-each-layer --contigious-checkpointing
+[2021-11-26 08:24:37,522] [INFO] [launch.py:73:main] 0 NCCL_VERSION=2.10.3
+[2021-11-26 08:24:37,522] [INFO] [launch.py:80:main] WORLD INFO DICT: {'localhost': [0, 1, 2, 3, 4, 5, 6, 7]}
+[2021-11-26 08:24:37,522] [INFO] [launch.py:86:main] nnodes=1, num_local_procs=8, node_rank=0
+[2021-11-26 08:24:37,522] [INFO] [launch.py:99:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2, 3, 4, 5, 6, 7]})
+[2021-11-26 08:24:37,522] [INFO] [launch.py:100:main] dist_world_size=8
+[2021-11-26 08:24:37,522] [INFO] [launch.py:102:main] Setting CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+using world size: 8 and model-parallel size: 2 
+using torch.float16 for parameters ...
+-------------------- arguments --------------------
+  adam_beta1 ...................... 0.9
+  adam_beta2 ...................... 0.999
+  adam_eps ........................ 1e-08
+  adlr_autoresume ................. False
+  adlr_autoresume_interval ........ 1000
+  apply_query_key_layer_scaling ... False
+  apply_residual_connection_post_layernorm  False
+  attention_dropout ............... 0.1
+  attention_softmax_in_fp32 ....... False
+  batch_size ...................... 16
+  bert_load ....................... None
+  bias_dropout_fusion ............. False
+  bias_gelu_fusion ................ False
+  block_data_path ................. None
+  checkpoint_activations .......... True
+  checkpoint_in_cpu ............... True
+  checkpoint_num_layers ........... 1
+  clip_grad ....................... 1.0
+  contigious_checkpointing ........ True
+  cpu_optimizer ................... False
+  cpu_torch_adam .................. False
+  data_impl ....................... mmap
+  data_path ....................... /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document
+  DDP_impl ........................ local
+  deepscale ....................... False
+  deepscale_config ................ None
+  deepspeed ....................... True
+  deepspeed_activation_checkpointing  True
+  deepspeed_config ................ /workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json
+  deepspeed_mpi ................... False
+  distribute_checkpointed_activations  False
+  distributed_backend ............. nccl
+  dynamic_loss_scale .............. True
+  eod_mask_loss ................... False
+  eval_interval ................... 2000
+  eval_iters ...................... 1
+  exit_interval ................... None
+  faiss_use_gpu ................... False
+  finetune ........................ False
+  fp16 ............................ True
+  fp16_lm_cross_entropy ........... False
+  fp32_allreduce .................. False
+  hidden_dropout .................. 0.1
+  hidden_size ..................... 3072
+  hysteresis ...................... 2
+  ict_head_size ................... None
+  ict_load ........................ None
+  indexer_batch_size .............. 128
+  indexer_log_interval ............ 1000
+  init_method_std ................. 0.02
+  layernorm_epsilon ............... 1e-05
+  lazy_mpu_init ................... None
+  load ............................ checkpoints/gpt2_345m_ds
+  local_rank ...................... 0
+  log_interval .................... 1
+  loss_scale ...................... None
+  loss_scale_window ............... 1000
+  lr .............................. 0.00015
+  lr_decay_iters .................. 320000
+  lr_decay_style .................. cosine
+  lr_decay_tokens ................. None
+  make_vocab_size_divisible_by .... 128
+  mask_prob ....................... 0.15
+  max_position_embeddings ......... 1024
+  memory_centric_tiled_linear ..... False
+  merge_file ...................... /workspace/GPT_data/bpe/gpt2-merges.txt
+  min_lr .......................... 1e-05
+  min_scale ....................... 1
+  mmap_warmup ..................... False
+  model_parallel_size ............. 2
+  no_load_optim ................... False
+  no_load_rng ..................... False
+  no_save_optim ................... False
+  no_save_rng ..................... False
+  num_attention_heads ............. 16
+  num_layers ...................... 53
+  num_unique_layers ............... None
+  num_workers ..................... 2
+  onnx_safe ....................... None
+  openai_gelu ..................... False
+  override_lr_scheduler ........... False
+  param_sharing_style ............. grouped
+  params_dtype .................... torch.float16
+  partition_activations ........... True
+  profile_backward ................ False
+  query_in_block_prob ............. 0.1
+  rank ............................ 0
+  remote_device ................... none
+  report_topk_accuracies .......... []
+  reset_attention_mask ............ False
+  reset_position_ids .............. False
+  save ............................ checkpoints/gpt2_345m_ds
+  save_interval ................... 10000
+  scaled_masked_softmax_fusion .... False
+  scaled_upper_triang_masked_softmax_fusion  False
+  scattered_embeddings ............ True
+  seed ............................ 1234
+  seq_length ...................... 1024
+  short_seq_prob .................. 0.1
+  split ........................... 949,50,1
+  split_transformers .............. True
+  synchronize_each_layer .......... True
+  tensorboard_dir ................. None
+  tile_factor ..................... 1
+  titles_data_path ................ None
+  tokenizer_type .................. GPT2BPETokenizer
+  tokens .......................... 0
+  train_iters ..................... 32
+  train_tokens .................... None
+  use_checkpoint_lr_scheduler ..... False
+  use_cpu_initialization .......... False
+  use_one_sent_docs ............... False
+  use_pin_memory .................. False
+  vocab_file ...................... /workspace/GPT_data/bpe/gpt2-vocab.json
+  warmup .......................... 0.01
+  warmup_iters .................... None
+  weight_decay .................... 0.01
+  world_size ...................... 8
+  zero_allgather_bucket_size ...... 5000000000
+  zero_contigious_gradients ....... True
+  zero_reduce_bucket_size ......... 50000000
+  zero_reduce_scatter ............. True
+  zero_stage ...................... 3
+---------------- end of arguments ----------------
+> building GPT2BPETokenizer tokenizer ...
+ > padded vocab (size: 50257) with 175 dummy tokens (new size: 50432)
+> initializing torch distributed ...
+> initializing model parallel with size 2
+> setting random seeds to 1234 ...
+[2021-11-26 08:24:40,598] [INFO] [checkpointing.py:226:model_parallel_cuda_manual_seed] > initializing model parallel cuda seeds on global rank 0, model parallel rank 0, and data parallel rank 0 with model parallel seed: 3952 and data parallel seed: 1234
+[2021-11-26 08:24:42,869] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 08:24:42,882] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 08:24:42,886] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 08:24:42,919] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 08:24:42,928] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 08:24:42,931] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 08:24:42,931] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+building GPT2 model ...
+[2021-11-26 08:24:43,194] [INFO] [utils.py:822:see_memory_usage] Before Building Model
+[2021-11-26 08:24:43,199] [INFO] [utils.py:823:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2021-11-26 08:24:43,200] [INFO] [utils.py:831:see_memory_usage] CPU Virtual Memory:  used = 25.56 GB, percent = 2.5%
+[2021-11-26 08:24:43,200] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+ > number of parameters on model parallel rank 1            6.166 Billion
+[2021-11-26 08:24:45,735] [INFO] [utils.py:822:see_memory_usage] After Building Model
+[2021-11-26 08:24:45,736] [INFO] [utils.py:823:see_memory_usage] MA 1.44 GB         Max_MA 1.47 GB         CA 1.48 GB         Max_CA 1 GB 
+[2021-11-26 08:24:45,736] [INFO] [utils.py:831:see_memory_usage] CPU Virtual Memory:  used = 26.49 GB, percent = 2.6%
+ > number of parameters on model parallel rank 0            6.166 Billion
+> learning rate decay style: cosine
+DeepSpeed is enabled.
+[2021-11-26 08:24:45,740] [INFO] [logging.py:69:log_dist] [Rank 0] DeepSpeed info: version=0.5.8+51d42ab, git-hash=51d42ab, git-branch=master
+[2021-11-26 08:24:45,757] [INFO] [logging.py:69:log_dist] [Rank 0] initializing deepspeed groups using mpu
+[2021-11-26 08:24:45,757] [INFO] [logging.py:69:log_dist] [Rank 0] Initializing deepspeed groups with model parallel size 2, expert parallel size 1, and data parallel size 8
+[2021-11-26 08:24:45,758] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert data parallel process group with ranks: [0, 2, 4, 6]
+[2021-11-26 08:24:45,768] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [0]
+[2021-11-26 08:24:45,778] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [2]
+[2021-11-26 08:24:45,788] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [4]
+[2021-11-26 08:24:45,799] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [6]
+[2021-11-26 08:24:45,809] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert data parallel process group with ranks: [1, 3, 5, 7]
+[2021-11-26 08:24:45,819] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [1]
+[2021-11-26 08:24:45,829] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [3]
+[2021-11-26 08:24:45,830] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [5]
+[2021-11-26 08:24:45,840] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [7]
+[2021-11-26 08:24:45,842] [INFO] [engine.py:277:__init__] DeepSpeed Flops Profiler Enabled: False
+[2021-11-26 08:24:45,842] [INFO] [engine.py:1084:_configure_optimizer] Removing param_group that has no 'params' in the client Optimizer
+[2021-11-26 08:24:45,842] [INFO] [engine.py:1090:_configure_optimizer] Using client Optimizer as basic optimizer
+[2021-11-26 08:24:45,894] [INFO] [engine.py:1106:_configure_optimizer] DeepSpeed Basic Optimizer = AdamW
+[2021-11-26 08:24:45,894] [INFO] [utils.py:43:is_zero_supported_optimizer] Checking ZeRO support for optimizer=AdamW type=<class 'torch.optim.adamw.AdamW'>
+[2021-11-26 08:24:45,894] [INFO] [logging.py:69:log_dist] [Rank 0] Creating fp16 ZeRO stage 3 optimizer
+Initializing ZeRO Stage 3
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+[2021-11-26 08:24:45,896] [INFO] [stage3.py:639:__init__] Reduce bucket size 10000000.0
+[2021-11-26 08:24:45,896] [INFO] [stage3.py:640:__init__] Allgather bucket size 10000000.0
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Emitting ninja build file /root/.cache/torch_extensions/py38_cu114/utils/build.ninja...
+Building extension module utils...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module utils...
+Time to load utils op: 0.199967622756958 seconds
+Loading extension module utils...
+Loading extension module utils...
+Time to load utils op: 0.2028343677520752 seconds
+Time to load utils op: 0.20279741287231445 seconds
+Loading extension module utils...
+Loading extension module utils...
+Loading extension module utils...
+Loading extension module utils...
+Time to load utils op: 0.2023313045501709 secondsTime to load utils op: 0.20250654220581055 seconds
+
+Time to load utils op: 0.20145773887634277 seconds
+Time to load utils op: 0.2014448642730713 seconds
+Loading extension module utils...
+Time to load utils op: 0.20147466659545898 seconds
+[2021-11-26 08:24:51,438] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | init_optimizer_state: 108.70
+[2021-11-26 08:24:51,439] [INFO] [stage3.py:811:__init__] optimizer state initialized
+[2021-11-26 08:24:51,550] [INFO] [logging.py:69:log_dist] [Rank 0] DeepSpeed Final Optimizer = AdamW
+[2021-11-26 08:24:51,550] [INFO] [engine.py:798:_configure_lr_scheduler] DeepSpeed using client LR scheduler
+[2021-11-26 08:24:51,550] [INFO] [logging.py:69:log_dist] [Rank 0] DeepSpeed LR Scheduler = <megatron.learning_rates.AnnealingLR object at 0x7f519e5a5520>
+[2021-11-26 08:24:51,550] [INFO] [logging.py:69:log_dist] [Rank 0] step=0, skipped=0, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+No modifications detected for re-loaded extension module utils, skipping build step...
+Loading extension module utils...
+No modifications detected for re-loaded extension module utils, skipping build step...
+Loading extension module utils...
+Time to load utils op: 0.00031280517578125 seconds
+Time to load utils op: 0.0003104209899902344 seconds
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+No modifications detected for re-loaded extension module utils, skipping build step...
+Loading extension module utils...
+No modifications detected for re-loaded extension module utils, skipping build step...
+Loading extension module utils...
+Time to load utils op: 0.00047516822814941406 seconds
+Time to load utils op: 0.0005171298980712891 seconds
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+No modifications detected for re-loaded extension module utils, skipping build step...
+Loading extension module utils...
+No modifications detected for re-loaded extension module utils, skipping build step...Time to load utils op: 0.0003173351287841797 seconds
+
+Loading extension module utils...
+Time to load utils op: 0.0003387928009033203 seconds
+[2021-11-26 08:24:51,551] [INFO] [config.py:1044:print] DeepSpeedEngine configuration:
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   activation_checkpointing_config  {
+    "partition_activations": false, 
+    "contiguous_memory_optimization": false, 
+    "cpu_checkpointing": false, 
+    "number_checkpoints": null, 
+    "synchronize_checkpoint_boundary": false, 
+    "profile": false
+}
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True}
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   allreduce_always_fp32 ........ False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   amp_enabled .................. False
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   amp_params ................... False
+
+No modifications detected for re-loaded extension module utils, skipping build step...[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   autotuning_config ............ {
+    "enabled": false, 
+    "start_step": null, 
+    "end_step": null, 
+    "metric_path": null, 
+    "arg_mappings": null, 
+    "metric": "throughput", 
+    "model_info": null, 
+    "results_dir": null, 
+    "exps_dir": null, 
+    "overwrite": true, 
+    "fast": true, 
+    "start_profile_step": 3, 
+    "end_profile_step": 5, 
+    "tuner_type": "gridsearch", 
+    "tuner_early_stopping": 5, 
+    "tuner_num_trials": 50, 
+    "model_info_path": null, 
+    "mp_size": 1, 
+    "max_train_batch_size": null, 
+    "min_train_batch_size": 1, 
+    "max_train_micro_batch_size_per_gpu": 1.024000e+03, 
+    "min_train_micro_batch_size_per_gpu": 1, 
+    "num_tuning_micro_batch_sizes": 3
+}
+
+Loading extension module utils...
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   bfloat16_enabled ............. False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   checkpoint_tag_validation_enabled  True
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   checkpoint_tag_validation_fail  False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   curriculum_enabled ........... False
+Time to load utils op: 0.0005190372467041016 seconds
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   curriculum_params ............ False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   dataloader_drop_last ......... False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   disable_allgather ............ False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   dump_state ................... False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   dynamic_loss_scale_args ...... {'init_scale': 4294967296, 'scale_window': 1000, 'delayed_shift': 2, 'min_scale': 1}
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   eigenvalue_enabled ........... False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   eigenvalue_gas_boundary_resolution  1
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   eigenvalue_layer_num ......... 0
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   eigenvalue_max_iter .......... 100
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   eigenvalue_stability ......... 1e-06
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   eigenvalue_tol ............... 0.01
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   eigenvalue_verbose ........... False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   elasticity_enabled ........... False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   flops_profiler_config ........ {
+    "enabled": false, 
+    "profile_step": 1, 
+    "module_depth": -1, 
+    "top_modules": 1, 
+    "detailed": true, 
+    "output_file": null
+}
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   fp16_enabled ................. True
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   fp16_master_weights_and_gradients  False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   fp16_mixed_quantize .......... False
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   global_rank .................. 0
+[2021-11-26 08:24:51,552] [INFO] [config.py:1048:print]   gradient_accumulation_steps .. 1
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   gradient_clipping ............ 1.0
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   gradient_predivide_factor .... 1.0
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   initial_dynamic_scale ........ 4294967296
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   loss_scale ................... 0
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   memory_breakdown ............. False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   optimizer_legacy_fusion ...... False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   optimizer_name ............... None
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   optimizer_params ............. None
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0}
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   pld_enabled .................. False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   pld_params ................... False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   prescale_gradients ........... False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_change_rate ......... 0.001
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_groups .............. 1
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_offset .............. 1000
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_period .............. 1000
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_rounding ............ 0
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_start_bits .......... 16
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_target_bits ......... 8
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_training_enabled .... False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_type ................ 0
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   quantize_verbose ............. False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   scheduler_name ............... None
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   scheduler_params ............. None
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   sparse_attention ............. None
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   sparse_gradients_enabled ..... False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   steps_per_print .............. 1
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   tensorboard_enabled .......... False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   tensorboard_job_name ......... DeepSpeedJobName
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   tensorboard_output_path ...... 
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   train_batch_size ............. 64
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   train_micro_batch_size_per_gpu  16
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   use_quantizer_kernel ......... False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   wall_clock_breakdown ......... True
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   world_size ................... 4
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   zero_allow_untested_optimizer  False
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   zero_config .................. {
+    "stage": 3, 
+    "contiguous_gradients": true, 
+    "reduce_scatter": true, 
+    "reduce_bucket_size": 1.000000e+07, 
+    "allgather_partitions": true, 
+    "allgather_bucket_size": 5.000000e+08, 
+    "overlap_comm": true, 
+    "load_from_fp32_weights": true, 
+    "elastic_checkpoint": true, 
+    "offload_param": null, 
+    "offload_optimizer": null, 
+    "sub_group_size": 1.000000e+09, 
+    "prefetch_bucket_size": 1.000000e+07, 
+    "param_persistence_threshold": 1.000000e+05, 
+    "max_live_parameters": 1.000000e+09, 
+    "max_reuse_distance": 1.000000e+09, 
+    "gather_fp16_weights_on_model_save": false, 
+    "ignore_unused_parameters": true, 
+    "round_robin_gradients": false, 
+    "legacy_stage1": false
+}
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   zero_enabled ................. True
+[2021-11-26 08:24:51,553] [INFO] [config.py:1048:print]   zero_optimization_stage ...... 3
+[2021-11-26 08:24:51,554] [INFO] [config.py:1050:print]   json = {
+    "train_batch_size": 64, 
+    "gradient_accumulation_steps": 1, 
+    "steps_per_print": 1, 
+    "zero_optimization": {
+        "stage": 3, 
+        "stage3_max_live_parameters": 1.000000e+09, 
+        "stage3_max_reuse_distance": 1.000000e+09, 
+        "stage3_prefetch_bucket_size": 1.000000e+07, 
+        "stage3_param_persitence_threshold": 1.000000e+05, 
+        "reduce_bucket_size": 1.000000e+07, 
+        "contiguous_gradients": true
+    }, 
+    "gradient_clipping": 1.0, 
+    "fp16": {
+        "enabled": true, 
+        "loss_scale": 0, 
+        "loss_scale_window": 1000, 
+        "hysteresis": 2, 
+        "min_loss_scale": 1
+    }, 
+    "wall_clock_breakdown": true, 
+    "zero_allow_untested_optimizer": false
+}
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+No modifications detected for re-loaded extension module utils, skipping build step...
+Loading extension module utils...
+Time to load utils op: 0.00040984153747558594 seconds
+WARNING: could not find the metadata file checkpoints/gpt2_345m_ds/latest_checkpointed_iteration.txt 
+    will not load any checkpoints and will start from random
+> building train, validation, and test datasets ...
+ > datasets target sizes (minimum size):
+    train:      2048
+    validation: 64
+    test:       64
+> building train, validation, and test datasets for GPT2 ...
+ > building dataset index ...
+    reading sizes...
+    reading pointers...
+    reading document index...
+    creating numpy buffer of mmap...
+    creating memory view of numpy buffer...
+ > finished creating indexed dataset in 0.000268 seconds
+    number of documents: 533
+ > dataset split:
+    train:
+     document indices in [0, 505) total of 505 documents
+    validation:
+     document indices in [505, 532) total of 27 documents
+    test:
+     document indices in [532, 533) total of 1 documents
+ > loading doc-idx mapping from /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document_train_indexmap_2048ns_1024sl_1234s_doc_idx.npy
+ > loading sample-idx mapping from /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document_train_indexmap_2048ns_1024sl_1234s_sample_idx.npy
+ > loading shuffle-idx mapping from /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document_train_indexmap_2048ns_1024sl_1234s_shuffle_idx.npy
+    loaded indexed file in 0.001 seconds
+    total number of samples: 2071
+    total number of epochs: 15
+ > WARNING: could not find index map files, building the indices on rank 0 ...
+ > elasped time to build and save doc-idx mapping (seconds): 0.000250
+make: Entering directory '/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/data'
+make: Nothing to be done for 'default'.
+make: Leaving directory '/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/data'
+    using:
+     number of documents:       27
+     number of epochs:          13
+     sequence length:           1024
+     total number of samples:   68
+ > elasped time to build and save sample-idx mapping (seconds): 0.123359
+ > elasped time to build and save shuffle-idx mapping (seconds): 0.000146
+ > loading doc-idx mapping from /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document_valid_indexmap_64ns_1024sl_1234s_doc_idx.npy
+ > loading sample-idx mapping from /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document_valid_indexmap_64ns_1024sl_1234s_sample_idx.npy
+ > loading shuffle-idx mapping from /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document_valid_indexmap_64ns_1024sl_1234s_shuffle_idx.npy
+    loaded indexed file in 0.001 seconds
+    total number of samples: 69
+    total number of epochs: 13
+ > WARNING: could not find index map files, building the indices on rank 0 ...
+ > elasped time to build and save doc-idx mapping (seconds): 0.000169
+make: Entering directory '/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/data'
+make: Nothing to be done for 'default'.
+make: Leaving directory '/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/data'
+    using:
+     number of documents:       1
+     number of epochs:          192
+     sequence length:           1024
+     total number of samples:   64
+ > elasped time to build and save sample-idx mapping (seconds): 0.122589
+ > elasped time to build and save shuffle-idx mapping (seconds): 0.000135
+ > loading doc-idx mapping from /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document_test_indexmap_64ns_1024sl_1234s_doc_idx.npy
+ > loading sample-idx mapping from /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document_test_indexmap_64ns_1024sl_1234s_sample_idx.npy
+ > loading shuffle-idx mapping from /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document_test_indexmap_64ns_1024sl_1234s_shuffle_idx.npy
+    loaded indexed file in 0.001 seconds
+    total number of samples: 65
+    total number of epochs: 192
+> finished creating GPT2 datasets ...
+setting training data start iteration to 0
+setting validation data start iteration to 0
+done with setups ...
+time (ms) | model and optimizer: 8487.04 | train/valid/test data iterators: 1605.15
+training ...
+[2021-11-26 08:24:53,175] [INFO] [checkpointing.py:547:forward] Activation Checkpointing Information
+[2021-11-26 08:24:53,175] [INFO] [checkpointing.py:548:forward] ----Partition Activations True, CPU CHECKPOINTING True
+[2021-11-26 08:24:53,175] [INFO] [checkpointing.py:551:forward] ----contiguous Memory Checkpointing True with 106 total layers
+[2021-11-26 08:24:53,176] [INFO] [checkpointing.py:554:forward] ----Synchronization True
+[2021-11-26 08:24:53,176] [INFO] [checkpointing.py:555:forward] ----Profiling time in checkpointing False
+[2021-11-26 08:25:16,800] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 4294967296, reducing to 4294967296
+[2021-11-26 08:25:16,800] [INFO] [logging.py:69:log_dist] [Rank 0] step=1, skipped=1, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:25:16,800] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 19200.83 | backward_microstep: 4411.92 | backward_inner_microstep: 4402.63 | backward_allreduce_microstep: 9.17 | step_microstep: 3.28
+[2021-11-26 08:25:16,800] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 19200.84 | backward: 4411.91 | backward_inner: 4402.63 | backward_allreduce: 9.17 | step: 3.28
+ iteration        1/      32 | elapsed time per iteration (ms): 23638.6 | learning rate: 0.000E+00 | lm loss: 1.148245E+01 | loss scale: 4294967296.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+after 1 iterations memory (MB) | allocated: 10292.1220703125 | max allocated: 24096.53857421875 | reserved: 26982.0 | max reserved: 26982.0
+time (ms) | forward: 19221.62 | backward: 4412.06 | backward-backward: 4412.00 | backward-allreduce: 0.00 | optimizer: 3.44 | batch generator: 3.87
+Effective Tera Flops per GPU: 17.1 and total parameters 6.166 B
+[2021-11-26 08:25:42,323] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 4294967296, reducing to 2147483648.0
+[2021-11-26 08:25:42,323] [INFO] [logging.py:69:log_dist] [Rank 0] step=2, skipped=2, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:25:42,323] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21088.63 | backward_microstep: 4423.96 | backward_inner_microstep: 4417.74 | backward_allreduce_microstep: 6.13 | step_microstep: 3.21
+[2021-11-26 08:25:42,323] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21088.64 | backward: 4423.95 | backward_inner: 4417.74 | backward_allreduce: 6.13 | step: 3.21
+ iteration        2/      32 | elapsed time per iteration (ms): 25522.7 | learning rate: 0.000E+00 | lm loss: 1.148798E+01 | loss scale: 2147483648.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21091.08 | backward: 4424.06 | backward-backward: 4424.02 | backward-allreduce: 0.00 | optimizer: 3.36 | batch generator: 1.22
+Effective Tera Flops per GPU: 15.83 and total parameters 6.166 B
+[2021-11-26 08:26:07,922] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 2147483648.0, reducing to 1073741824.0
+[2021-11-26 08:26:07,922] [INFO] [logging.py:69:log_dist] [Rank 0] step=3, skipped=3, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:26:07,922] [INFO] [timer.py:181:stop] 0/3, SamplesPerSec=2.500614600438172
+[2021-11-26 08:26:07,922] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21069.44 | backward_microstep: 4520.74 | backward_inner_microstep: 4514.60 | backward_allreduce_microstep: 6.07 | step_microstep: 3.19
+[2021-11-26 08:26:07,922] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21069.44 | backward: 4520.74 | backward_inner: 4514.60 | backward_allreduce: 6.07 | step: 3.19
+ iteration        3/      32 | elapsed time per iteration (ms): 25599.3 | learning rate: 0.000E+00 | lm loss: 1.147450E+01 | loss scale: 1073741824.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21071.55 | backward: 4520.83 | backward-backward: 4520.80 | backward-allreduce: 0.00 | optimizer: 3.33 | batch generator: 0.88
+Effective Tera Flops per GPU: 15.79 and total parameters 6.166 B
+[2021-11-26 08:26:35,062] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 1073741824.0, reducing to 536870912.0
+[2021-11-26 08:26:35,063] [INFO] [logging.py:69:log_dist] [Rank 0] step=4, skipped=4, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:26:35,063] [INFO] [timer.py:181:stop] 0/4, SamplesPerSec=2.4275192486955763
+[2021-11-26 08:26:35,063] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 22490.38 | backward_microstep: 4638.82 | backward_inner_microstep: 4622.56 | backward_allreduce_microstep: 16.18 | step_microstep: 5.16
+[2021-11-26 08:26:35,063] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 22490.39 | backward: 4638.82 | backward_inner: 4622.56 | backward_allreduce: 16.18 | step: 5.16
+ iteration        4/      32 | elapsed time per iteration (ms): 27140.3 | learning rate: 0.000E+00 | lm loss: 1.147701E+01 | loss scale: 536870912.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 22492.76 | backward: 4638.91 | backward-backward: 4638.88 | backward-allreduce: 0.00 | optimizer: 5.30 | batch generator: 0.91
+Effective Tera Flops per GPU: 14.89 and total parameters 6.166 B
+[2021-11-26 08:27:02,288] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 536870912.0, reducing to 268435456.0
+[2021-11-26 08:27:02,288] [INFO] [logging.py:69:log_dist] [Rank 0] step=5, skipped=5, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:27:02,289] [INFO] [timer.py:181:stop] 0/5, SamplesPerSec=2.401520100998196
+[2021-11-26 08:27:02,289] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 22648.58 | backward_microstep: 4567.91 | backward_inner_microstep: 4560.67 | backward_allreduce_microstep: 7.16 | step_microstep: 3.80
+[2021-11-26 08:27:02,289] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 22648.58 | backward: 4567.91 | backward_inner: 4560.67 | backward_allreduce: 7.16 | step: 3.80
+ iteration        5/      32 | elapsed time per iteration (ms): 27225.8 | learning rate: 0.000E+00 | lm loss: 1.149544E+01 | loss scale: 268435456.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 22650.66 | backward: 4567.99 | backward-backward: 4567.96 | backward-allreduce: 0.00 | optimizer: 3.94 | batch generator: 0.93
+Effective Tera Flops per GPU: 14.84 and total parameters 6.166 B
+[2021-11-26 08:27:29,652] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 268435456.0, reducing to 134217728.0
+[2021-11-26 08:27:29,652] [INFO] [logging.py:69:log_dist] [Rank 0] step=6, skipped=6, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:27:29,652] [INFO] [timer.py:181:stop] 0/6, SamplesPerSec=2.3856581586735355
+[2021-11-26 08:27:29,652] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 22942.38 | backward_microstep: 4412.44 | backward_inner_microstep: 4406.91 | backward_allreduce_microstep: 5.45 | step_microstep: 3.39
+[2021-11-26 08:27:29,652] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 22942.38 | backward: 4412.44 | backward_inner: 4406.92 | backward_allreduce: 5.45 | step: 3.39
+ iteration        6/      32 | elapsed time per iteration (ms): 27363.9 | learning rate: 0.000E+00 | lm loss: 1.146767E+01 | loss scale: 134217728.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 22944.44 | backward: 4412.51 | backward-backward: 4412.48 | backward-allreduce: 0.00 | optimizer: 3.53 | batch generator: 0.91
+Effective Tera Flops per GPU: 14.77 and total parameters 6.166 B
+[2021-11-26 08:27:56,006] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 134217728.0, reducing to 67108864.0
+[2021-11-26 08:27:56,007] [INFO] [logging.py:69:log_dist] [Rank 0] step=7, skipped=7, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:27:56,007] [INFO] [timer.py:181:stop] 0/7, SamplesPerSec=2.3941866893089467
+[2021-11-26 08:27:56,007] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21870.22 | backward_microstep: 4459.41 | backward_inner_microstep: 4453.15 | backward_allreduce_microstep: 6.19 | step_microstep: 4.29
+[2021-11-26 08:27:56,007] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21870.22 | backward: 4459.41 | backward_inner: 4453.15 | backward_allreduce: 6.19 | step: 4.29
+ iteration        7/      32 | elapsed time per iteration (ms): 26354.3 | learning rate: 0.000E+00 | lm loss: 1.148478E+01 | loss scale: 67108864.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21887.16 | backward: 4459.50 | backward-backward: 4459.46 | backward-allreduce: 0.00 | optimizer: 4.44 | batch generator: 0.87
+Effective Tera Flops per GPU: 15.33 and total parameters 6.166 B
+[2021-11-26 08:28:22,314] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 67108864.0, reducing to 33554432.0
+[2021-11-26 08:28:22,314] [INFO] [logging.py:69:log_dist] [Rank 0] step=8, skipped=8, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:28:22,314] [INFO] [timer.py:181:stop] 0/8, SamplesPerSec=2.4006073807612087
+[2021-11-26 08:28:22,314] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21901.02 | backward_microstep: 4381.84 | backward_inner_microstep: 4376.58 | backward_allreduce_microstep: 5.18 | step_microstep: 3.45
+[2021-11-26 08:28:22,314] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21901.01 | backward: 4381.84 | backward_inner: 4376.59 | backward_allreduce: 5.18 | step: 3.45
+ iteration        8/      32 | elapsed time per iteration (ms): 26307.8 | learning rate: 0.000E+00 | lm loss: 1.148149E+01 | loss scale: 33554432.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21918.88 | backward: 4381.92 | backward-backward: 4381.89 | backward-allreduce: 0.00 | optimizer: 3.59 | batch generator: 0.92
+Effective Tera Flops per GPU: 15.36 and total parameters 6.166 B
+[2021-11-26 08:28:48,086] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 33554432.0, reducing to 16777216.0
+[2021-11-26 08:28:48,086] [INFO] [logging.py:69:log_dist] [Rank 0] step=9, skipped=9, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:28:48,086] [INFO] [timer.py:181:stop] 0/9, SamplesPerSec=2.412158834734362
+[2021-11-26 08:28:48,086] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21384.53 | backward_microstep: 4356.72 | backward_inner_microstep: 4349.37 | backward_allreduce_microstep: 7.27 | step_microstep: 2.46
+[2021-11-26 08:28:48,086] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21384.53 | backward: 4356.72 | backward_inner: 4349.38 | backward_allreduce: 7.27 | step: 2.46
+ iteration        9/      32 | elapsed time per iteration (ms): 25771.7 | learning rate: 0.000E+00 | lm loss: 1.148140E+01 | loss scale: 16777216.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21408.74 | backward: 4356.81 | backward-backward: 4356.77 | backward-allreduce: 0.00 | optimizer: 2.60 | batch generator: 0.87
+Effective Tera Flops per GPU: 15.68 and total parameters 6.166 B
+[2021-11-26 08:29:14,838] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 16777216.0, reducing to 8388608.0
+[2021-11-26 08:29:14,838] [INFO] [logging.py:69:log_dist] [Rank 0] step=10, skipped=10, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:29:14,838] [INFO] [timer.py:181:stop] 0/10, SamplesPerSec=2.4097224340836645
+[2021-11-26 08:29:14,839] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 22385.31 | backward_microstep: 4350.14 | backward_inner_microstep: 4343.95 | backward_allreduce_microstep: 6.10 | step_microstep: 3.50
+[2021-11-26 08:29:14,839] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 22385.32 | backward: 4350.13 | backward_inner: 4343.95 | backward_allreduce: 6.11 | step: 3.50
+ iteration       10/      32 | elapsed time per iteration (ms): 26752.7 | learning rate: 0.000E+00 | lm loss: 1.147640E+01 | loss scale: 8388608.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 22395.08 | backward: 4350.22 | backward-backward: 4350.19 | backward-allreduce: 0.00 | optimizer: 3.64 | batch generator: 1.01
+Effective Tera Flops per GPU: 15.11 and total parameters 6.166 B
+[2021-11-26 08:29:41,056] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 8388608.0, reducing to 4194304.0
+[2021-11-26 08:29:41,057] [INFO] [logging.py:69:log_dist] [Rank 0] step=11, skipped=11, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:29:41,057] [INFO] [timer.py:181:stop] 0/11, SamplesPerSec=2.4132219688797036
+[2021-11-26 08:29:41,057] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21763.08 | backward_microstep: 4445.67 | backward_inner_microstep: 4441.06 | backward_allreduce_microstep: 4.53 | step_microstep: 3.28
+[2021-11-26 08:29:41,057] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21763.08 | backward: 4445.67 | backward_inner: 4441.06 | backward_allreduce: 4.53 | step: 3.28
+ iteration       11/      32 | elapsed time per iteration (ms): 26217.9 | learning rate: 0.000E+00 | lm loss: 1.149256E+01 | loss scale: 4194304.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21765.23 | backward: 4445.77 | backward-backward: 4445.73 | backward-allreduce: 0.00 | optimizer: 3.43 | batch generator: 0.94
+Effective Tera Flops per GPU: 15.41 and total parameters 6.166 B
+[2021-11-26 08:30:06,724] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 4194304.0, reducing to 2097152.0
+[2021-11-26 08:30:06,724] [INFO] [logging.py:69:log_dist] [Rank 0] step=12, skipped=12, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:30:06,725] [INFO] [timer.py:181:stop] 0/12, SamplesPerSec=2.421062799117343
+[2021-11-26 08:30:06,725] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21271.06 | backward_microstep: 4382.70 | backward_inner_microstep: 4377.66 | backward_allreduce_microstep: 4.97 | step_microstep: 2.64
+[2021-11-26 08:30:06,725] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21271.07 | backward: 4382.70 | backward_inner: 4377.66 | backward_allreduce: 4.97 | step: 2.64
+ iteration       12/      32 | elapsed time per iteration (ms): 25667.8 | learning rate: 0.000E+00 | lm loss: 1.147883E+01 | loss scale: 2097152.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21278.06 | backward: 4382.79 | backward-backward: 4382.75 | backward-allreduce: 0.00 | optimizer: 2.78 | batch generator: 0.89
+Effective Tera Flops per GPU: 15.74 and total parameters 6.166 B
+[2021-11-26 08:30:32,740] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 2097152.0, reducing to 1048576.0
+[2021-11-26 08:30:32,740] [INFO] [logging.py:69:log_dist] [Rank 0] step=13, skipped=13, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:30:32,740] [INFO] [timer.py:181:stop] 0/13, SamplesPerSec=2.4246015514595625
+[2021-11-26 08:30:32,740] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21739.08 | backward_microstep: 4265.48 | backward_inner_microstep: 4260.15 | backward_allreduce_microstep: 5.26 | step_microstep: 5.38
+[2021-11-26 08:30:32,740] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21739.08 | backward: 4265.48 | backward_inner: 4260.15 | backward_allreduce: 5.27 | step: 5.38
+ iteration       13/      32 | elapsed time per iteration (ms): 26015.5 | learning rate: 0.000E+00 | lm loss: 1.148222E+01 | loss scale: 1048576.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21741.06 | backward: 4265.57 | backward-backward: 4265.54 | backward-allreduce: 0.00 | optimizer: 5.52 | batch generator: 0.85
+Effective Tera Flops per GPU: 15.53 and total parameters 6.166 B
+[2021-11-26 08:30:58,458] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 1048576.0, reducing to 524288.0
+[2021-11-26 08:30:58,459] [INFO] [logging.py:69:log_dist] [Rank 0] step=14, skipped=14, lr=[0.0, 0.0], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:30:58,459] [INFO] [timer.py:181:stop] 0/14, SamplesPerSec=2.429839251541143
+[2021-11-26 08:30:58,459] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21468.66 | backward_microstep: 4227.04 | backward_inner_microstep: 4221.72 | backward_allreduce_microstep: 5.24 | step_microstep: 15.83
+[2021-11-26 08:30:58,459] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21468.66 | backward: 4227.04 | backward_inner: 4221.73 | backward_allreduce: 5.24 | step: 15.83
+ iteration       14/      32 | elapsed time per iteration (ms): 25719.0 | learning rate: 0.000E+00 | lm loss: 1.149077E+01 | loss scale: 524288.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21472.08 | backward: 4227.12 | backward-backward: 4227.09 | backward-allreduce: 0.00 | optimizer: 15.98 | batch generator: 0.86
+Effective Tera Flops per GPU: 15.71 and total parameters 6.166 B
+[2021-11-26 08:31:24,447] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 105.31
+[2021-11-26 08:31:24,448] [INFO] [logging.py:69:log_dist] [Rank 0] step=15, skipped=14, lr=[4.6874999999999995e-08, 4.6874999999999995e-08], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:31:24,448] [INFO] [timer.py:181:stop] 0/15, SamplesPerSec=2.4323658273216613
+[2021-11-26 08:31:24,448] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21537.05 | backward_microstep: 4248.58 | backward_inner_microstep: 4242.67 | backward_allreduce_microstep: 5.83 | step_microstep: 196.44
+[2021-11-26 08:31:24,448] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21537.05 | backward: 4248.58 | backward_inner: 4242.67 | backward_allreduce: 5.83 | step: 196.45
+ iteration       15/      32 | elapsed time per iteration (ms): 25989.1 | learning rate: 4.687E-08 | lm loss: 1.148217E+01 | loss scale: 524288.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 21540.22 | backward: 4248.67 | backward-backward: 4248.64 | backward-allreduce: 0.00 | optimizer: 196.61 | batch generator: 0.90
+Effective Tera Flops per GPU: 15.55 and total parameters 6.166 B
+[2021-11-26 08:31:45,132] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.26
+[2021-11-26 08:31:45,133] [INFO] [logging.py:69:log_dist] [Rank 0] step=16, skipped=14, lr=[9.374999999999999e-08, 9.374999999999999e-08], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:31:45,133] [INFO] [timer.py:181:stop] 0/16, SamplesPerSec=2.470148574120925
+[2021-11-26 08:31:45,133] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 16232.06 | backward_microstep: 4256.92 | backward_inner_microstep: 4251.15 | backward_allreduce_microstep: 5.68 | step_microstep: 151.47
+[2021-11-26 08:31:45,133] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 16232.06 | backward: 4256.91 | backward_inner: 4251.15 | backward_allreduce: 5.69 | step: 151.48
+ iteration       16/      32 | elapsed time per iteration (ms): 20685.1 | learning rate: 9.375E-08 | lm loss: 1.147658E+01 | loss scale: 524288.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 16271.24 | backward: 4257.01 | backward-backward: 4256.98 | backward-allreduce: 0.00 | optimizer: 151.64 | batch generator: 1.26
+Effective Tera Flops per GPU: 19.54 and total parameters 6.166 B
+[2021-11-26 08:32:05,961] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.14
+[2021-11-26 08:32:05,962] [INFO] [logging.py:69:log_dist] [Rank 0] step=17, skipped=14, lr=[1.40625e-07, 1.40625e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:32:05,962] [INFO] [timer.py:181:stop] 0/17, SamplesPerSec=2.5029184892838385
+[2021-11-26 08:32:05,962] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 16215.64 | backward_microstep: 4447.54 | backward_inner_microstep: 4441.57 | backward_allreduce_microstep: 5.90 | step_microstep: 151.14
+[2021-11-26 08:32:05,962] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 16215.66 | backward: 4447.54 | backward_inner: 4441.57 | backward_allreduce: 5.90 | step: 151.14
+ iteration       17/      32 | elapsed time per iteration (ms): 20828.2 | learning rate: 1.406E-07 | lm loss: 1.146763E+01 | loss scale: 524288.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 16224.53 | backward: 4447.63 | backward-backward: 4447.60 | backward-allreduce: 0.00 | optimizer: 151.28 | batch generator: 1.08
+Effective Tera Flops per GPU: 19.4 and total parameters 6.166 B
+[2021-11-26 08:32:27,965] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.18
+[2021-11-26 08:32:27,966] [INFO] [logging.py:69:log_dist] [Rank 0] step=18, skipped=14, lr=[1.8749999999999998e-07, 1.8749999999999998e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:32:27,966] [INFO] [timer.py:181:stop] 0/18, SamplesPerSec=2.5249607385309725
+[2021-11-26 08:32:27,966] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 17344.90 | backward_microstep: 4467.83 | backward_inner_microstep: 4462.32 | backward_allreduce_microstep: 5.44 | step_microstep: 148.64
+[2021-11-26 08:32:27,966] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 17344.91 | backward: 4467.83 | backward_inner: 4462.32 | backward_allreduce: 5.44 | step: 148.64
+ iteration       18/      32 | elapsed time per iteration (ms): 22004.2 | learning rate: 1.875E-07 | lm loss: 1.142567E+01 | loss scale: 524288.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 17383.83 | backward: 4467.93 | backward-backward: 4467.89 | backward-allreduce: 0.00 | optimizer: 148.78 | batch generator: 0.89
+Effective Tera Flops per GPU: 18.37 and total parameters 6.166 B
+[2021-11-26 08:32:48,281] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.15
+[2021-11-26 08:32:48,282] [INFO] [logging.py:69:log_dist] [Rank 0] step=19, skipped=14, lr=[2.3437499999999998e-07, 2.3437499999999998e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:32:48,282] [INFO] [timer.py:181:stop] 0/19, SamplesPerSec=2.5548228246051714
+[2021-11-26 08:32:48,282] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 15716.20 | backward_microstep: 4405.33 | backward_inner_microstep: 4399.52 | backward_allreduce_microstep: 5.73 | step_microstep: 147.75
+[2021-11-26 08:32:48,282] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 15716.21 | backward: 4405.33 | backward_inner: 4399.52 | backward_allreduce: 5.73 | step: 147.75
+ iteration       19/      32 | elapsed time per iteration (ms): 20316.0 | learning rate: 2.344E-07 | lm loss: 1.127815E+01 | loss scale: 524288.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 15759.03 | backward: 4405.41 | backward-backward: 4405.38 | backward-allreduce: 0.00 | optimizer: 147.90 | batch generator: 0.90
+Effective Tera Flops per GPU: 19.89 and total parameters 6.166 B
+[2021-11-26 08:33:08,468] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.18
+[2021-11-26 08:33:08,469] [INFO] [logging.py:69:log_dist] [Rank 0] step=20, skipped=14, lr=[2.8125e-07, 2.8125e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:33:08,469] [INFO] [timer.py:181:stop] 0/20, SamplesPerSec=2.5827118021513824
+[2021-11-26 08:33:08,469] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 15568.48 | backward_microstep: 4453.16 | backward_inner_microstep: 4447.80 | backward_allreduce_microstep: 5.29 | step_microstep: 148.57
+[2021-11-26 08:33:08,469] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 15568.48 | backward: 4453.16 | backward_inner: 4447.80 | backward_allreduce: 5.29 | step: 148.57
+ iteration       20/      32 | elapsed time per iteration (ms): 20187.0 | learning rate: 2.813E-07 | lm loss: 1.121004E+01 | loss scale: 524288.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 15581.51 | backward: 4453.25 | backward-backward: 4453.22 | backward-allreduce: 0.00 | optimizer: 148.71 | batch generator: 0.88
+Effective Tera Flops per GPU: 20.02 and total parameters 6.166 B
+[2021-11-26 08:33:30,231] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.18
+[2021-11-26 08:33:30,231] [INFO] [logging.py:69:log_dist] [Rank 0] step=21, skipped=14, lr=[3.28125e-07, 3.28125e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:33:30,232] [INFO] [timer.py:181:stop] 0/21, SamplesPerSec=2.5994013465681007
+[2021-11-26 08:33:30,232] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 17160.38 | backward_microstep: 4410.11 | backward_inner_microstep: 4404.86 | backward_allreduce_microstep: 5.17 | step_microstep: 158.72
+[2021-11-26 08:33:30,232] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 17160.39 | backward: 4410.11 | backward_inner: 4404.87 | backward_allreduce: 5.17 | step: 158.72
+ iteration       21/      32 | elapsed time per iteration (ms): 21762.8 | learning rate: 3.281E-07 | lm loss: 1.070094E+01 | loss scale: 524288.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 17190.09 | backward: 4410.19 | backward-backward: 4410.16 | backward-allreduce: 0.00 | optimizer: 158.86 | batch generator: 0.88
+Effective Tera Flops per GPU: 18.57 and total parameters 6.166 B
+[2021-11-26 08:33:50,936] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.21
+[2021-11-26 08:33:50,937] [INFO] [logging.py:69:log_dist] [Rank 0] step=22, skipped=14, lr=[3.7499999999999996e-07, 3.7499999999999996e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:33:50,937] [INFO] [timer.py:181:stop] 0/22, SamplesPerSec=2.620267820375814
+[2021-11-26 08:33:50,937] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 16227.56 | backward_microstep: 4321.57 | backward_inner_microstep: 4316.38 | backward_allreduce_microstep: 5.11 | step_microstep: 150.16
+[2021-11-26 08:33:50,937] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 16227.57 | backward: 4321.57 | backward_inner: 4316.38 | backward_allreduce: 5.11 | step: 150.16
+ iteration       22/      32 | elapsed time per iteration (ms): 20705.6 | learning rate: 3.750E-07 | lm loss: 1.049791E+01 | loss scale: 524288.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 16229.84 | backward: 4321.67 | backward-backward: 4321.63 | backward-allreduce: 0.00 | optimizer: 150.31 | batch generator: 0.89
+Effective Tera Flops per GPU: 19.52 and total parameters 6.166 B
+[2021-11-26 08:34:11,104] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 524288.0, reducing to 262144.0
+[2021-11-26 08:34:11,104] [INFO] [logging.py:69:log_dist] [Rank 0] step=23, skipped=15, lr=[3.7499999999999996e-07, 3.7499999999999996e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:34:11,104] [INFO] [timer.py:181:stop] 0/23, SamplesPerSec=2.642236771129797
+[2021-11-26 08:34:11,104] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 15793.68 | backward_microstep: 4320.18 | backward_inner_microstep: 4314.73 | backward_allreduce_microstep: 5.36 | step_microstep: 32.01
+[2021-11-26 08:34:11,104] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 15793.69 | backward: 4320.17 | backward_inner: 4314.73 | backward_allreduce: 5.36 | step: 32.01
+ iteration       23/      32 | elapsed time per iteration (ms): 20167.3 | learning rate: 3.750E-07 | lm loss: 1.000654E+01 | loss scale: 262144.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 15810.18 | backward: 4320.27 | backward-backward: 4320.23 | backward-allreduce: 0.00 | optimizer: 32.25 | batch generator: 1.01
+Effective Tera Flops per GPU: 20.04 and total parameters 6.166 B
+[2021-11-26 08:34:36,399] [INFO] [stage3.py:2763:_overflow_clean_up] [deepscale] OVERFLOW! Rank 0 Skipping step. Attempted loss scale: 262144.0, reducing to 131072.0
+[2021-11-26 08:34:36,400] [INFO] [logging.py:69:log_dist] [Rank 0] step=24, skipped=16, lr=[3.7499999999999996e-07, 3.7499999999999996e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:34:36,400] [INFO] [timer.py:181:stop] 0/24, SamplesPerSec=2.636957439891247
+[2021-11-26 08:34:36,400] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 20929.94 | backward_microstep: 4325.96 | backward_inner_microstep: 4309.67 | backward_allreduce_microstep: 16.22 | step_microstep: 31.68
+[2021-11-26 08:34:36,400] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 20929.95 | backward: 4325.96 | backward_inner: 4309.67 | backward_allreduce: 16.22 | step: 31.68
+ iteration       24/      32 | elapsed time per iteration (ms): 25295.5 | learning rate: 3.750E-07 | lm loss: 9.938525E+00 | loss scale: 131072.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 20933.19 | backward: 4326.05 | backward-backward: 4326.01 | backward-allreduce: 0.00 | optimizer: 31.83 | batch generator: 0.93
+Effective Tera Flops per GPU: 15.98 and total parameters 6.166 B
+[2021-11-26 08:35:02,876] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.15
+[2021-11-26 08:35:02,876] [INFO] [logging.py:69:log_dist] [Rank 0] step=25, skipped=16, lr=[4.2187499999999993e-07, 4.2187499999999993e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:35:02,876] [INFO] [timer.py:181:stop] 0/25, SamplesPerSec=2.626607091090298
+[2021-11-26 08:35:02,876] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 21995.79 | backward_microstep: 4321.74 | backward_inner_microstep: 4316.61 | backward_allreduce_microstep: 5.06 | step_microstep: 149.21
+[2021-11-26 08:35:02,876] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 21995.80 | backward: 4321.74 | backward_inner: 4316.61 | backward_allreduce: 5.06 | step: 149.21
+ iteration       25/      32 | elapsed time per iteration (ms): 26476.2 | learning rate: 4.219E-07 | lm loss: 9.979153E+00 | loss scale: 131072.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 22001.01 | backward: 4321.83 | backward-backward: 4321.80 | backward-allreduce: 0.00 | optimizer: 149.37 | batch generator: 0.96
+Effective Tera Flops per GPU: 15.26 and total parameters 6.166 B
+[2021-11-26 08:35:23,841] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.17
+[2021-11-26 08:35:23,841] [INFO] [logging.py:69:log_dist] [Rank 0] step=26, skipped=16, lr=[4.6874999999999996e-07, 4.6874999999999996e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:35:23,841] [INFO] [timer.py:181:stop] 0/26, SamplesPerSec=2.6420004677629265
+[2021-11-26 08:35:23,842] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 16423.25 | backward_microstep: 4380.21 | backward_inner_microstep: 4374.16 | backward_allreduce_microstep: 5.96 | step_microstep: 149.66
+[2021-11-26 08:35:23,842] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 16423.27 | backward: 4380.21 | backward_inner: 4374.16 | backward_allreduce: 5.96 | step: 149.66
+ iteration       26/      32 | elapsed time per iteration (ms): 20965.3 | learning rate: 4.687E-07 | lm loss: 9.942844E+00 | loss scale: 131072.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 16430.92 | backward: 4380.31 | backward-backward: 4380.27 | backward-allreduce: 0.00 | optimizer: 149.81 | batch generator: 0.94
+Effective Tera Flops per GPU: 19.28 and total parameters 6.166 B
+[2021-11-26 08:35:44,538] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.17
+[2021-11-26 08:35:44,539] [INFO] [logging.py:69:log_dist] [Rank 0] step=27, skipped=16, lr=[5.156249999999999e-07, 5.156249999999999e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:35:44,539] [INFO] [timer.py:181:stop] 0/27, SamplesPerSec=2.657506397907446
+[2021-11-26 08:35:44,539] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 16152.18 | backward_microstep: 4366.06 | backward_inner_microstep: 4361.73 | backward_allreduce_microstep: 4.24 | step_microstep: 150.25
+[2021-11-26 08:35:44,539] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 16152.19 | backward: 4366.05 | backward_inner: 4361.73 | backward_allreduce: 4.25 | step: 150.25
+ iteration       27/      32 | elapsed time per iteration (ms): 20697.5 | learning rate: 5.156E-07 | lm loss: 9.869594E+00 | loss scale: 131072.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 16176.08 | backward: 4366.16 | backward-backward: 4366.12 | backward-allreduce: 0.00 | optimizer: 150.40 | batch generator: 1.01
+Effective Tera Flops per GPU: 19.53 and total parameters 6.166 B
+[2021-11-26 08:36:04,666] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.30
+[2021-11-26 08:36:04,667] [INFO] [logging.py:69:log_dist] [Rank 0] step=28, skipped=16, lr=[5.625e-07, 5.625e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:36:04,667] [INFO] [timer.py:181:stop] 0/28, SamplesPerSec=2.6744278901147656
+[2021-11-26 08:36:04,667] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 15568.11 | backward_microstep: 4386.86 | backward_inner_microstep: 4380.75 | backward_allreduce_microstep: 5.99 | step_microstep: 151.50
+[2021-11-26 08:36:04,667] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 15568.12 | backward: 4386.86 | backward_inner: 4380.76 | backward_allreduce: 5.99 | step: 151.50
+ iteration       28/      32 | elapsed time per iteration (ms): 20127.9 | learning rate: 5.625E-07 | lm loss: 9.651848E+00 | loss scale: 131072.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 15584.43 | backward: 4386.97 | backward-backward: 4386.93 | backward-allreduce: 0.00 | optimizer: 151.65 | batch generator: 0.97
+Effective Tera Flops per GPU: 20.08 and total parameters 6.166 B
+[2021-11-26 08:36:25,284] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.25
+[2021-11-26 08:36:25,285] [INFO] [logging.py:69:log_dist] [Rank 0] step=29, skipped=16, lr=[6.09375e-07, 6.09375e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:36:25,285] [INFO] [timer.py:181:stop] 0/29, SamplesPerSec=2.688236933683779
+[2021-11-26 08:36:25,285] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 16026.09 | backward_microstep: 4412.45 | backward_inner_microstep: 4407.02 | backward_allreduce_microstep: 5.34 | step_microstep: 149.83
+[2021-11-26 08:36:25,285] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 16026.10 | backward: 4412.45 | backward_inner: 4407.03 | backward_allreduce: 5.34 | step: 149.83
+ iteration       29/      32 | elapsed time per iteration (ms): 20618.1 | learning rate: 6.094E-07 | lm loss: 9.581136E+00 | loss scale: 131072.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 16050.96 | backward: 4412.54 | backward-backward: 4412.51 | backward-allreduce: 0.00 | optimizer: 149.98 | batch generator: 0.81
+Effective Tera Flops per GPU: 19.6 and total parameters 6.166 B
+[2021-11-26 08:36:45,332] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.21
+[2021-11-26 08:36:45,333] [INFO] [logging.py:69:log_dist] [Rank 0] step=30, skipped=16, lr=[6.5625e-07, 6.5625e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:36:45,333] [INFO] [timer.py:181:stop] 0/30, SamplesPerSec=2.7035097462952784
+[2021-11-26 08:36:45,333] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 15551.57 | backward_microstep: 4333.41 | backward_inner_microstep: 4327.82 | backward_allreduce_microstep: 5.52 | step_microstep: 148.85
+[2021-11-26 08:36:45,333] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 15551.58 | backward: 4333.41 | backward_inner: 4327.82 | backward_allreduce: 5.52 | step: 148.85
+ iteration       30/      32 | elapsed time per iteration (ms): 20048.2 | learning rate: 6.562E-07 | lm loss: 9.496663E+00 | loss scale: 131072.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 15561.04 | backward: 4333.51 | backward-backward: 4333.47 | backward-allreduce: 0.00 | optimizer: 149.00 | batch generator: 0.80
+Effective Tera Flops per GPU: 20.16 and total parameters 6.166 B
+[2021-11-26 08:37:06,188] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.24
+[2021-11-26 08:37:06,188] [INFO] [logging.py:69:log_dist] [Rank 0] step=31, skipped=16, lr=[7.031249999999999e-07, 7.031249999999999e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:37:06,188] [INFO] [timer.py:181:stop] 0/31, SamplesPerSec=2.7146773695478856
+[2021-11-26 08:37:06,188] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 16312.15 | backward_microstep: 4372.17 | backward_inner_microstep: 4317.61 | backward_allreduce_microstep: 54.48 | step_microstep: 148.57
+[2021-11-26 08:37:06,189] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 16312.15 | backward: 4372.17 | backward_inner: 4317.62 | backward_allreduce: 54.48 | step: 148.57
+ iteration       31/      32 | elapsed time per iteration (ms): 20855.1 | learning rate: 7.031E-07 | lm loss: 9.397177E+00 | loss scale: 131072.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 16329.74 | backward: 4372.27 | backward-backward: 4372.23 | backward-allreduce: 0.00 | optimizer: 148.72 | batch generator: 0.80
+Effective Tera Flops per GPU: 19.38 and total parameters 6.166 B
+[2021-11-26 08:37:26,336] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | optimizer_step: 65.16
+[2021-11-26 08:37:26,336] [INFO] [logging.py:69:log_dist] [Rank 0] step=32, skipped=16, lr=[7.499999999999999e-07, 7.499999999999999e-07], mom=[(0.9, 0.999), (0.9, 0.999)]
+[2021-11-26 08:37:26,336] [INFO] [timer.py:181:stop] 0/32, SamplesPerSec=2.7279198168371304
+[2021-11-26 08:37:26,336] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward_microstep: 15641.54 | backward_microstep: 4334.27 | backward_inner_microstep: 4328.82 | backward_allreduce_microstep: 5.38 | step_microstep: 147.61
+[2021-11-26 08:37:26,336] [INFO] [logging.py:69:log_dist] [Rank 0] rank=0 time (ms) | forward: 15641.55 | backward: 4334.27 | backward_inner: 4328.82 | backward_allreduce: 5.38 | step: 147.61
+ iteration       32/      32 | elapsed time per iteration (ms): 20147.8 | learning rate: 7.500E-07 | lm loss: 9.298223E+00 | loss scale: 131072.0 | number of skipped iterations:   0 | number of nan iterations:   0 |
+time (ms) | forward: 15661.83 | backward: 4334.35 | backward-backward: 4334.32 | backward-allreduce: 0.00 | optimizer: 147.75 | batch generator: 0.70
+Effective Tera Flops per GPU: 20.06 and total parameters 6.166 B
+------------------------------------------------------------------------------------------------------------------
+ validation loss at the end of training for val data | lm loss value: 9.335300E+00 | lm loss PPL: 1.133103E+04 | 
+------------------------------------------------------------------------------------------------------------------
+[2021-11-26 08:37:41,659] [INFO] [logging.py:69:log_dist] [Rank 1] Saving model checkpoint: checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_0_mp_rank_01_model_states.pt
+[2021-11-26 08:37:41,660] [INFO] [logging.py:69:log_dist] [Rank 0] Saving model checkpoint: checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_0_mp_rank_00_model_states.pt
+[2021-11-26 08:38:02,075] [INFO] [engine.py:2915:_save_zero_checkpoint] zero checkpoint saved checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_3_mp_rank_01_optim_states.pt
+[2021-11-26 08:38:06,999] [INFO] [engine.py:2915:_save_zero_checkpoint] zero checkpoint saved checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_2_mp_rank_01_optim_states.pt
+[2021-11-26 08:38:07,478] [INFO] [engine.py:2915:_save_zero_checkpoint] zero checkpoint saved checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_3_mp_rank_00_optim_states.pt
+[2021-11-26 08:38:07,727] [INFO] [engine.py:2915:_save_zero_checkpoint] zero checkpoint saved checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_2_mp_rank_00_optim_states.pt
+[2021-11-26 08:38:09,213] [INFO] [engine.py:2915:_save_zero_checkpoint] zero checkpoint saved checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_0_mp_rank_01_optim_states.pt
+[2021-11-26 08:38:09,242] [INFO] [engine.py:2915:_save_zero_checkpoint] zero checkpoint saved checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_1_mp_rank_00_optim_states.pt
+[2021-11-26 08:38:09,363] [INFO] [engine.py:2915:_save_zero_checkpoint] zero checkpoint saved checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_1_mp_rank_01_optim_states.pt
+[2021-11-26 08:38:09,381] [INFO] [engine.py:2915:_save_zero_checkpoint] zero checkpoint saved checkpoints/gpt2_345m_ds/global_step32/zero_pp_rank_0_mp_rank_00_optim_states.pt
+Evaluating iter 1/1
+-------------------------------------------------------------------------------------------------------------------
+ validation loss at the end of training for test data | lm loss value: 9.722530E+00 | lm loss PPL: 1.668942E+04 | 
+-------------------------------------------------------------------------------------------------------------------
+[2021-11-26 08:38:27,399] [INFO] [launch.py:160:main] Process 89751 exits successfully.
+[2021-11-26 08:38:28,400] [INFO] [launch.py:160:main] Process 89749 exits successfully.
+[2021-11-26 08:38:28,401] [INFO] [launch.py:160:main] Process 89746 exits successfully.
+[2021-11-26 08:38:28,401] [INFO] [launch.py:160:main] Process 89752 exits successfully.
+[2021-11-26 08:38:29,402] [INFO] [launch.py:160:main] Process 89750 exits successfully.
+[2021-11-26 08:38:29,402] [INFO] [launch.py:160:main] Process 89747 exits successfully.
+[2021-11-26 08:38:29,403] [INFO] [launch.py:160:main] Process 89753 exits successfully.
+[2021-11-26 08:38:29,403] [INFO] [launch.py:160:main] Process 89748 exits successfully.

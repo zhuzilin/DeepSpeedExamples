@@ -1,0 +1,461 @@
+MODEL SIZE 20 MP_SIZE 2 NUM_GPUS_PER_WORKER 8
+deepspeed --num_nodes 1 --num_gpus 8 pretrain_gpt2.py --model-parallel-size 2 --num-layers 25 --hidden-size 8192 --num-attention-heads 16 --seq-length 1024 --max-position-embeddings 1024 --batch-size 16 --train-iters 32 --lr-decay-iters 320000 --save checkpoints/gpt2_345m_ds --load checkpoints/gpt2_345m_ds --data-path /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document --vocab-file /workspace/GPT_data/bpe/gpt2-vocab.json --merge-file /workspace/GPT_data/bpe/gpt2-merges.txt --data-impl mmap --split 949,50,1 --distributed-backend nccl --lr 1.5e-4 --lr-decay-style cosine --min-lr 1.0e-5 --weight-decay 1e-2 --clip-grad 1.0 --warmup 0.01 --checkpoint-activations --log-interval 1 --save-interval 10000 --eval-interval 2000 --eval-iters 1 --fp16 --scattered-embeddings --split-transformers --deepspeed --deepspeed_config /workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json --zero-stage 3 --zero-reduce-bucket-size 50000000 --zero-allgather-bucket-size 5000000000 --zero-contigious-gradients --zero-reduce-scatter --deepspeed-activation-checkpointing --checkpoint-num-layers 1 --partition-activations --checkpoint-in-cpu --synchronize-each-layer --contigious-checkpointing
+[2021-11-26 09:03:07,810] [WARNING] [runner.py:132:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+[2021-11-26 09:03:09,097] [INFO] [runner.py:398:main] cmd = /opt/conda/bin/python3.8 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMiwgMywgNCwgNSwgNiwgN119 --master_addr=127.0.0.1 --master_port=29500 pretrain_gpt2.py --model-parallel-size 2 --num-layers 25 --hidden-size 8192 --num-attention-heads 16 --seq-length 1024 --max-position-embeddings 1024 --batch-size 16 --train-iters 32 --lr-decay-iters 320000 --save checkpoints/gpt2_345m_ds --load checkpoints/gpt2_345m_ds --data-path /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document --vocab-file /workspace/GPT_data/bpe/gpt2-vocab.json --merge-file /workspace/GPT_data/bpe/gpt2-merges.txt --data-impl mmap --split 949,50,1 --distributed-backend nccl --lr 1.5e-4 --lr-decay-style cosine --min-lr 1.0e-5 --weight-decay 1e-2 --clip-grad 1.0 --warmup 0.01 --checkpoint-activations --log-interval 1 --save-interval 10000 --eval-interval 2000 --eval-iters 1 --fp16 --scattered-embeddings --split-transformers --deepspeed --deepspeed_config /workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json --zero-stage 3 --zero-reduce-bucket-size 50000000 --zero-allgather-bucket-size 5000000000 --zero-contigious-gradients --zero-reduce-scatter --deepspeed-activation-checkpointing --checkpoint-num-layers 1 --partition-activations --checkpoint-in-cpu --synchronize-each-layer --contigious-checkpointing
+[2021-11-26 09:03:09,779] [INFO] [launch.py:73:main] 0 NCCL_VERSION=2.10.3
+[2021-11-26 09:03:09,779] [INFO] [launch.py:80:main] WORLD INFO DICT: {'localhost': [0, 1, 2, 3, 4, 5, 6, 7]}
+[2021-11-26 09:03:09,779] [INFO] [launch.py:86:main] nnodes=1, num_local_procs=8, node_rank=0
+[2021-11-26 09:03:09,779] [INFO] [launch.py:99:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2, 3, 4, 5, 6, 7]})
+[2021-11-26 09:03:09,779] [INFO] [launch.py:100:main] dist_world_size=8
+[2021-11-26 09:03:09,779] [INFO] [launch.py:102:main] Setting CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+using world size: 8 and model-parallel size: 2 
+using torch.float16 for parameters ...
+-------------------- arguments --------------------
+  adam_beta1 ...................... 0.9
+  adam_beta2 ...................... 0.999
+  adam_eps ........................ 1e-08
+  adlr_autoresume ................. False
+  adlr_autoresume_interval ........ 1000
+  apply_query_key_layer_scaling ... False
+  apply_residual_connection_post_layernorm  False
+  attention_dropout ............... 0.1
+  attention_softmax_in_fp32 ....... False
+  batch_size ...................... 16
+  bert_load ....................... None
+  bias_dropout_fusion ............. False
+  bias_gelu_fusion ................ False
+  block_data_path ................. None
+  checkpoint_activations .......... True
+  checkpoint_in_cpu ............... True
+  checkpoint_num_layers ........... 1
+  clip_grad ....................... 1.0
+  contigious_checkpointing ........ True
+  cpu_optimizer ................... False
+  cpu_torch_adam .................. False
+  data_impl ....................... mmap
+  data_path ....................... /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document
+  DDP_impl ........................ local
+  deepscale ....................... False
+  deepscale_config ................ None
+  deepspeed ....................... True
+  deepspeed_activation_checkpointing  True
+  deepspeed_config ................ /workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json
+  deepspeed_mpi ................... False
+  distribute_checkpointed_activations  False
+  distributed_backend ............. nccl
+  dynamic_loss_scale .............. True
+  eod_mask_loss ................... False
+  eval_interval ................... 2000
+  eval_iters ...................... 1
+  exit_interval ................... None
+  faiss_use_gpu ................... False
+  finetune ........................ False
+  fp16 ............................ True
+  fp16_lm_cross_entropy ........... False
+  fp32_allreduce .................. False
+  hidden_dropout .................. 0.1
+  hidden_size ..................... 8192
+  hysteresis ...................... 2
+  ict_head_size ................... None
+  ict_load ........................ None
+  indexer_batch_size .............. 128
+  indexer_log_interval ............ 1000
+  init_method_std ................. 0.02
+  layernorm_epsilon ............... 1e-05
+  lazy_mpu_init ................... None
+  load ............................ checkpoints/gpt2_345m_ds
+  local_rank ...................... 0
+  log_interval .................... 1
+  loss_scale ...................... None
+  loss_scale_window ............... 1000
+  lr .............................. 0.00015
+  lr_decay_iters .................. 320000
+  lr_decay_style .................. cosine
+  lr_decay_tokens ................. None
+  make_vocab_size_divisible_by .... 128
+  mask_prob ....................... 0.15
+  max_position_embeddings ......... 1024
+  memory_centric_tiled_linear ..... False
+  merge_file ...................... /workspace/GPT_data/bpe/gpt2-merges.txt
+  min_lr .......................... 1e-05
+  min_scale ....................... 1
+  mmap_warmup ..................... False
+  model_parallel_size ............. 2
+  no_load_optim ................... False
+  no_load_rng ..................... False
+  no_save_optim ................... False
+  no_save_rng ..................... False
+  num_attention_heads ............. 16
+  num_layers ...................... 25
+  num_unique_layers ............... None
+  num_workers ..................... 2
+  onnx_safe ....................... None
+  openai_gelu ..................... False
+  override_lr_scheduler ........... False
+  param_sharing_style ............. grouped
+  params_dtype .................... torch.float16
+  partition_activations ........... True
+  profile_backward ................ False
+  query_in_block_prob ............. 0.1
+  rank ............................ 0
+  remote_device ................... none
+  report_topk_accuracies .......... []
+  reset_attention_mask ............ False
+  reset_position_ids .............. False
+  save ............................ checkpoints/gpt2_345m_ds
+  save_interval ................... 10000
+  scaled_masked_softmax_fusion .... False
+  scaled_upper_triang_masked_softmax_fusion  False
+  scattered_embeddings ............ True
+  seed ............................ 1234
+  seq_length ...................... 1024
+  short_seq_prob .................. 0.1
+  split ........................... 949,50,1
+  split_transformers .............. True
+  synchronize_each_layer .......... True
+  tensorboard_dir ................. None
+  tile_factor ..................... 1
+  titles_data_path ................ None
+  tokenizer_type .................. GPT2BPETokenizer
+  tokens .......................... 0
+  train_iters ..................... 32
+  train_tokens .................... None
+  use_checkpoint_lr_scheduler ..... False
+  use_cpu_initialization .......... False
+  use_one_sent_docs ............... False
+  use_pin_memory .................. False
+  vocab_file ...................... /workspace/GPT_data/bpe/gpt2-vocab.json
+  warmup .......................... 0.01
+  warmup_iters .................... None
+  weight_decay .................... 0.01
+  world_size ...................... 8
+  zero_allgather_bucket_size ...... 5000000000
+  zero_contigious_gradients ....... True
+  zero_reduce_bucket_size ......... 50000000
+  zero_reduce_scatter ............. True
+  zero_stage ...................... 3
+---------------- end of arguments ----------------
+> building GPT2BPETokenizer tokenizer ...
+ > padded vocab (size: 50257) with 175 dummy tokens (new size: 50432)
+> initializing torch distributed ...
+> initializing model parallel with size 2
+> setting random seeds to 1234 ...
+[2021-11-26 09:03:13,007] [INFO] [checkpointing.py:226:model_parallel_cuda_manual_seed] > initializing model parallel cuda seeds on global rank 0, model parallel rank 0, and data parallel rank 0 with model parallel seed: 3952 and data parallel seed: 1234
+[2021-11-26 09:03:15,248] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 09:03:15,249] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 09:03:15,265] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 09:03:15,266] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 09:03:15,271] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 09:03:15,298] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 09:03:15,318] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+building GPT2 model ...
+[2021-11-26 09:03:15,582] [INFO] [utils.py:822:see_memory_usage] Before Building Model
+[2021-11-26 09:03:15,583] [INFO] [utils.py:823:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2021-11-26 09:03:15,583] [INFO] [utils.py:831:see_memory_usage] CPU Virtual Memory:  used = 25.61 GB, percent = 2.5%
+[2021-11-26 09:03:15,583] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+ > number of parameters on model parallel rank 1            20.566 Billion
+[2021-11-26 09:03:18,261] [INFO] [utils.py:822:see_memory_usage] After Building Model
+[2021-11-26 09:03:18,262] [INFO] [utils.py:823:see_memory_usage] MA 4.79 GB         Max_MA 5.04 GB         CA 5.23 GB         Max_CA 5 GB 
+[2021-11-26 09:03:18,262] [INFO] [utils.py:831:see_memory_usage] CPU Virtual Memory:  used = 26.46 GB, percent = 2.6%
+ > number of parameters on model parallel rank 0            20.566 Billion
+> learning rate decay style: cosine
+DeepSpeed is enabled.
+[2021-11-26 09:03:18,265] [INFO] [logging.py:69:log_dist] [Rank 0] DeepSpeed info: version=0.5.8+51d42ab, git-hash=51d42ab, git-branch=master
+[2021-11-26 09:03:18,273] [INFO] [logging.py:69:log_dist] [Rank 0] initializing deepspeed groups using mpu
+[2021-11-26 09:03:18,273] [INFO] [logging.py:69:log_dist] [Rank 0] Initializing deepspeed groups with model parallel size 2, expert parallel size 1, and data parallel size 8
+[2021-11-26 09:03:18,273] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert data parallel process group with ranks: [0, 2, 4, 6]
+[2021-11-26 09:03:18,284] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [0]
+[2021-11-26 09:03:18,294] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [2]
+[2021-11-26 09:03:18,304] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [4]
+[2021-11-26 09:03:18,314] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [6]
+[2021-11-26 09:03:18,325] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert data parallel process group with ranks: [1, 3, 5, 7]
+[2021-11-26 09:03:18,335] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [1]
+[2021-11-26 09:03:18,345] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [3]
+[2021-11-26 09:03:18,345] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [5]
+[2021-11-26 09:03:18,355] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [7]
+[2021-11-26 09:03:18,356] [INFO] [engine.py:277:__init__] DeepSpeed Flops Profiler Enabled: False
+[2021-11-26 09:03:18,356] [INFO] [engine.py:1084:_configure_optimizer] Removing param_group that has no 'params' in the client Optimizer
+[2021-11-26 09:03:18,356] [INFO] [engine.py:1090:_configure_optimizer] Using client Optimizer as basic optimizer
+[2021-11-26 09:03:18,369] [INFO] [engine.py:1106:_configure_optimizer] DeepSpeed Basic Optimizer = AdamW
+[2021-11-26 09:03:18,369] [INFO] [utils.py:43:is_zero_supported_optimizer] Checking ZeRO support for optimizer=AdamW type=<class 'torch.optim.adamw.AdamW'>
+[2021-11-26 09:03:18,369] [INFO] [logging.py:69:log_dist] [Rank 0] Creating fp16 ZeRO stage 3 optimizer
+Initializing ZeRO Stage 3
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+[2021-11-26 09:03:18,371] [INFO] [stage3.py:639:__init__] Reduce bucket size 10000000.0
+[2021-11-26 09:03:18,371] [INFO] [stage3.py:640:__init__] Allgather bucket size 10000000.0
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Emitting ninja build file /root/.cache/torch_extensions/py38_cu114/utils/build.ninja...
+Building extension module utils...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module utils...
+Time to load utils op: 0.2119767665863037 seconds
+Loading extension module utils...
+Loading extension module utils...
+Loading extension module utils...
+Loading extension module utils...
+Time to load utils op: 0.30245542526245117 seconds
+Time to load utils op: 0.30240726470947266 secondsTime to load utils op: 0.30171942710876465 seconds
+
+Time to load utils op: 0.30156898498535156 seconds
+Loading extension module utils...
+Loading extension module utils...
+Time to load utils op: 0.3025045394897461 seconds
+Loading extension module utils...
+Time to load utils op: 0.3026437759399414 seconds
+Time to load utils op: 0.30217981338500977 seconds
+Traceback (most recent call last):
+  File "pretrain_gpt2.py", line 133, in <module>
+Traceback (most recent call last):
+  File "pretrain_gpt2.py", line 133, in <module>
+    pretrain(train_valid_test_datasets_provider, model_provider, forward_step,
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 91, in pretrain
+    model, optimizer, lr_scheduler = setup_model_and_optimizer(model_provider)
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 251, in setup_model_and_optimizer
+    pretrain(train_valid_test_datasets_provider, model_provider, forward_step,
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 91, in pretrain
+    model, optimizer, _, lr_scheduler = deepspeed.initialize(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/__init__.py", line 119, in initialize
+    model, optimizer, lr_scheduler = setup_model_and_optimizer(model_provider)
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 251, in setup_model_and_optimizer
+    engine = DeepSpeedEngine(args=args,
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 293, in __init__
+    model, optimizer, _, lr_scheduler = deepspeed.initialize(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/__init__.py", line 119, in initialize
+    self._configure_optimizer(optimizer, model_parameters)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1122, in _configure_optimizer
+    engine = DeepSpeedEngine(args=args,
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 293, in __init__
+    self._configure_optimizer(optimizer, model_parameters)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1122, in _configure_optimizer
+    self.optimizer = self._configure_zero_optimizer(basic_optimizer)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1395, in _configure_zero_optimizer
+    self.optimizer = self._configure_zero_optimizer(basic_optimizer)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1395, in _configure_zero_optimizer
+    optimizer = FP16_DeepSpeedZeroOptimizer_Stage3(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 806, in __init__
+    optimizer = FP16_DeepSpeedZeroOptimizer_Stage3(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 806, in __init__
+    self.initialize_optimizer_states()
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1726, in initialize_optimizer_states
+    self.initialize_optimizer_states()
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1726, in initialize_optimizer_states
+    self._optimizer_step(i)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1646, in _optimizer_step
+Traceback (most recent call last):
+  File "pretrain_gpt2.py", line 133, in <module>
+    self._optimizer_step(i)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1646, in _optimizer_step
+    pretrain(train_valid_test_datasets_provider, model_provider, forward_step,
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 91, in pretrain
+Traceback (most recent call last):
+  File "pretrain_gpt2.py", line 133, in <module>
+    model, optimizer, lr_scheduler = setup_model_and_optimizer(model_provider)
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 251, in setup_model_and_optimizer
+Traceback (most recent call last):
+        model, optimizer, _, lr_scheduler = deepspeed.initialize(self.optimizer.step()
+
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/__init__.py", line 119, in initialize
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+  File "pretrain_gpt2.py", line 133, in <module>
+        self.optimizer.step()    pretrain(train_valid_test_datasets_provider, model_provider, forward_step,    return func(*args, **kwargs)
+
+engine = DeepSpeedEngine(args=args,
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 91, in pretrain
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+
+  File "/opt/conda/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 293, in __init__
+        return func(*args, **kwargs)return func(*args, **kwargs)
+
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/adamw.py", line 110, in step
+  File "/opt/conda/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+    model, optimizer, lr_scheduler = setup_model_and_optimizer(model_provider)
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 251, in setup_model_and_optimizer
+    self._configure_optimizer(optimizer, model_parameters)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1122, in _configure_optimizer
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/adamw.py", line 110, in step
+    F.adamw(params_with_grad,
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/_functional.py", line 139, in adamw
+Traceback (most recent call last):
+      File "pretrain_gpt2.py", line 133, in <module>
+model, optimizer, _, lr_scheduler = deepspeed.initialize(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/__init__.py", line 119, in initialize
+    F.adamw(params_with_grad,
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/_functional.py", line 139, in adamw
+        pretrain(train_valid_test_datasets_provider, model_provider, forward_step,denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(eps)
+
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 91, in pretrain
+RuntimeError: CUDA out of memory. Tried to allocate 3.75 GiB (GPU 3; 39.59 GiB total capacity; 37.10 GiB already allocated; 30.19 MiB free; 37.35 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+    engine = DeepSpeedEngine(args=args,
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 293, in __init__
+    denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(eps)
+RuntimeError: CUDA out of memory. Tried to allocate 3.75 GiB (GPU 0; 39.59 GiB total capacity; 37.10 GiB already allocated; 318.19 MiB free; 37.35 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+    model, optimizer, lr_scheduler = setup_model_and_optimizer(model_provider)
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 251, in setup_model_and_optimizer
+    self._configure_optimizer(optimizer, model_parameters)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1122, in _configure_optimizer
+    self.optimizer = self._configure_zero_optimizer(basic_optimizer)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1395, in _configure_zero_optimizer
+    model, optimizer, _, lr_scheduler = deepspeed.initialize(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/__init__.py", line 119, in initialize
+    pretrain(train_valid_test_datasets_provider, model_provider, forward_step,
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 91, in pretrain
+Traceback (most recent call last):
+    engine = DeepSpeedEngine(args=args,
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 293, in __init__
+  File "pretrain_gpt2.py", line 133, in <module>
+    self.optimizer = self._configure_zero_optimizer(basic_optimizer)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1395, in _configure_zero_optimizer
+    model, optimizer, lr_scheduler = setup_model_and_optimizer(model_provider)
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 251, in setup_model_and_optimizer
+    self._configure_optimizer(optimizer, model_parameters)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1122, in _configure_optimizer
+    optimizer = FP16_DeepSpeedZeroOptimizer_Stage3(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 806, in __init__
+    model, optimizer, _, lr_scheduler = deepspeed.initialize(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/__init__.py", line 119, in initialize
+    engine = DeepSpeedEngine(args=args,
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 293, in __init__
+    optimizer = FP16_DeepSpeedZeroOptimizer_Stage3(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 806, in __init__
+    self.optimizer = self._configure_zero_optimizer(basic_optimizer)    
+pretrain(train_valid_test_datasets_provider, model_provider, forward_step,  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1395, in _configure_zero_optimizer
+
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 91, in pretrain
+        self._configure_optimizer(optimizer, model_parameters)self.initialize_optimizer_states()
+
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1122, in _configure_optimizer
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1726, in initialize_optimizer_states
+    model, optimizer, lr_scheduler = setup_model_and_optimizer(model_provider)
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 251, in setup_model_and_optimizer
+Traceback (most recent call last):
+    self.initialize_optimizer_states()
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1726, in initialize_optimizer_states
+  File "pretrain_gpt2.py", line 133, in <module>
+    optimizer = FP16_DeepSpeedZeroOptimizer_Stage3(
+    model, optimizer, _, lr_scheduler = deepspeed.initialize(  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 806, in __init__
+
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/__init__.py", line 119, in initialize
+    self.optimizer = self._configure_zero_optimizer(basic_optimizer)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1395, in _configure_zero_optimizer
+    engine = DeepSpeedEngine(args=args,
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 293, in __init__
+    self._configure_optimizer(optimizer, model_parameters)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1122, in _configure_optimizer
+            self._optimizer_step(i)pretrain(train_valid_test_datasets_provider, model_provider, forward_step,self.initialize_optimizer_states()
+
+
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1646, in _optimizer_step
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1726, in initialize_optimizer_states
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 91, in pretrain
+    optimizer = FP16_DeepSpeedZeroOptimizer_Stage3(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 806, in __init__
+    self._optimizer_step(i)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1646, in _optimizer_step
+    model, optimizer, lr_scheduler = setup_model_and_optimizer(model_provider)
+  File "/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/megatron/training.py", line 251, in setup_model_and_optimizer
+    self.optimizer = self._configure_zero_optimizer(basic_optimizer)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1395, in _configure_zero_optimizer
+    model, optimizer, _, lr_scheduler = deepspeed.initialize(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/__init__.py", line 119, in initialize
+    engine = DeepSpeedEngine(args=args,
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 293, in __init__
+    self.initialize_optimizer_states()
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1726, in initialize_optimizer_states
+    self._configure_optimizer(optimizer, model_parameters)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1122, in _configure_optimizer
+    optimizer = FP16_DeepSpeedZeroOptimizer_Stage3(
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 806, in __init__
+    self.optimizer.step()
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+    self._optimizer_step(i)
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1646, in _optimizer_step
+        self.optimizer.step()return func(*args, **kwargs)
+
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+  File "/opt/conda/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/adamw.py", line 110, in step
+        return func(*args, **kwargs)
+self.optimizer = self._configure_zero_optimizer(basic_optimizer)
+  File "/opt/conda/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/engine.py", line 1395, in _configure_zero_optimizer
+    F.adamw(params_with_grad,
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/_functional.py", line 139, in adamw
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/adamw.py", line 110, in step
+    self.initialize_optimizer_states()
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1726, in initialize_optimizer_states
+    denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(eps)
+RuntimeError    : F.adamw(params_with_grad,CUDA out of memory. Tried to allocate 3.75 GiB (GPU 6; 39.59 GiB total capacity; 37.10 GiB already allocated; 174.19 MiB free; 37.35 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/_functional.py", line 139, in adamw
+    denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(eps)
+RuntimeError: CUDA out of memory. Tried to allocate 3.75 GiB (GPU 7; 39.59 GiB total capacity; 37.10 GiB already allocated; 318.19 MiB free; 37.35 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+        self._optimizer_step(i)optimizer = FP16_DeepSpeedZeroOptimizer_Stage3(
+
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1646, in _optimizer_step
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 806, in __init__
+    self.optimizer.step()
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/adamw.py", line 110, in step
+    F.adamw(params_with_grad,
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/_functional.py", line 139, in adamw
+    self.initialize_optimizer_states()
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1726, in initialize_optimizer_states
+        denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(eps)self._optimizer_step(i)
+
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1646, in _optimizer_step
+RuntimeError: CUDA out of memory. Tried to allocate 3.75 GiB (GPU 2; 39.59 GiB total capacity; 37.10 GiB already allocated; 30.19 MiB free; 37.35 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+    self.optimizer.step()
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/adamw.py", line 110, in step
+    F.adamw(params_with_grad,
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/_functional.py", line 139, in adamw
+        self.optimizer.step()self._optimizer_step(i)
+
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+  File "/opt/conda/lib/python3.8/site-packages/deepspeed/runtime/zero/stage3.py", line 1646, in _optimizer_step
+    denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(eps)
+RuntimeError: CUDA out of memory. Tried to allocate 3.75 GiB (GPU 1; 39.59 GiB total capacity; 37.10 GiB already allocated; 174.19 MiB free; 37.35 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/adamw.py", line 110, in step
+    F.adamw(params_with_grad,
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/_functional.py", line 139, in adamw
+    denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(eps)
+RuntimeError: CUDA out of memory. Tried to allocate 3.75 GiB (GPU 5; 39.59 GiB total capacity; 37.10 GiB already allocated; 30.19 MiB free; 37.35 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+    self.optimizer.step()
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/optimizer.py", line 88, in wrapper
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/autograd/grad_mode.py", line 28, in decorate_context
+    return func(*args, **kwargs)
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/adamw.py", line 110, in step
+    F.adamw(params_with_grad,
+  File "/opt/conda/lib/python3.8/site-packages/torch/optim/_functional.py", line 139, in adamw
+    denom = (exp_avg_sq.sqrt() / math.sqrt(bias_correction2)).add_(eps)
+RuntimeError: CUDA out of memory. Tried to allocate 3.75 GiB (GPU 4; 39.59 GiB total capacity; 37.10 GiB already allocated; 30.19 MiB free; 37.35 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+[2021-11-26 09:03:29,844] [INFO] [launch.py:131:sigkill_handler] Killing subprocess 119814
+[2021-11-26 09:03:29,845] [INFO] [launch.py:131:sigkill_handler] Killing subprocess 119815
+[2021-11-26 09:03:29,845] [INFO] [launch.py:131:sigkill_handler] Killing subprocess 119816
+[2021-11-26 09:03:29,845] [INFO] [launch.py:131:sigkill_handler] Killing subprocess 119817
+[2021-11-26 09:03:29,845] [INFO] [launch.py:131:sigkill_handler] Killing subprocess 119818
+[2021-11-26 09:03:29,845] [INFO] [launch.py:131:sigkill_handler] Killing subprocess 119819
+[2021-11-26 09:03:29,845] [INFO] [launch.py:131:sigkill_handler] Killing subprocess 119820
+[2021-11-26 09:03:29,845] [INFO] [launch.py:131:sigkill_handler] Killing subprocess 119821
+[2021-11-26 09:03:29,845] [ERROR] [launch.py:137:sigkill_handler] ['/opt/conda/bin/python3.8', '-u', 'pretrain_gpt2.py', '--local_rank=7', '--model-parallel-size', '2', '--num-layers', '25', '--hidden-size', '8192', '--num-attention-heads', '16', '--seq-length', '1024', '--max-position-embeddings', '1024', '--batch-size', '16', '--train-iters', '32', '--lr-decay-iters', '320000', '--save', 'checkpoints/gpt2_345m_ds', '--load', 'checkpoints/gpt2_345m_ds', '--data-path', '/workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document', '--vocab-file', '/workspace/GPT_data/bpe/gpt2-vocab.json', '--merge-file', '/workspace/GPT_data/bpe/gpt2-merges.txt', '--data-impl', 'mmap', '--split', '949,50,1', '--distributed-backend', 'nccl', '--lr', '1.5e-4', '--lr-decay-style', 'cosine', '--min-lr', '1.0e-5', '--weight-decay', '1e-2', '--clip-grad', '1.0', '--warmup', '0.01', '--checkpoint-activations', '--log-interval', '1', '--save-interval', '10000', '--eval-interval', '2000', '--eval-iters', '1', '--fp16', '--scattered-embeddings', '--split-transformers', '--deepspeed', '--deepspeed_config', '/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json', '--zero-stage', '3', '--zero-reduce-bucket-size', '50000000', '--zero-allgather-bucket-size', '5000000000', '--zero-contigious-gradients', '--zero-reduce-scatter', '--deepspeed-activation-checkpointing', '--checkpoint-num-layers', '1', '--partition-activations', '--checkpoint-in-cpu', '--synchronize-each-layer', '--contigious-checkpointing'] exits with return code = 1

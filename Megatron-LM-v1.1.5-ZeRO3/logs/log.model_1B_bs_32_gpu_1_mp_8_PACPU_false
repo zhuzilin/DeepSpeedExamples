@@ -1,0 +1,288 @@
+MODEL SIZE 1 MP_SIZE 8 NUM_GPUS_PER_WORKER 1
+deepspeed --num_nodes 1 --num_gpus 1 pretrain_gpt2.py --model-parallel-size 8 --num-layers 20 --hidden-size 2048 --num-attention-heads 16 --seq-length 1024 --max-position-embeddings 1024 --batch-size 32 --train-iters 32 --lr-decay-iters 320000 --save checkpoints/gpt2_1B_ds --load checkpoints/gpt2_1B_ds --data-path /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document --vocab-file /workspace/GPT_data/bpe/gpt2-vocab.json --merge-file /workspace/GPT_data/bpe/gpt2-merges.txt --data-impl mmap --split 949,50,1 --distributed-backend nccl --lr 1.5e-4 --lr-decay-style cosine --min-lr 1.0e-5 --weight-decay 1e-2 --clip-grad 1.0 --warmup 0.01 --checkpoint-activations --log-interval 1 --save-interval 10000 --eval-interval 2000 --eval-iters 10 --fp16 --cpu-optimizer --deepspeed --deepspeed_config /workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json --zero-stage 3 --zero-reduce-bucket-size 50000000 --zero-allgather-bucket-size 5000000000 --zero-contigious-gradients --zero-reduce-scatter --deepspeed-activation-checkpointing --checkpoint-num-layers 1 --partition-activations --synchronize-each-layer --contigious-checkpointing
+[2021-11-26 06:56:54,365] [WARNING] [runner.py:132:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+[2021-11-26 06:56:54,953] [INFO] [runner.py:398:main] cmd = /opt/conda/bin/python3.8 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMF19 --master_addr=127.0.0.1 --master_port=29500 pretrain_gpt2.py --model-parallel-size 8 --num-layers 20 --hidden-size 2048 --num-attention-heads 16 --seq-length 1024 --max-position-embeddings 1024 --batch-size 32 --train-iters 32 --lr-decay-iters 320000 --save checkpoints/gpt2_1B_ds --load checkpoints/gpt2_1B_ds --data-path /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document --vocab-file /workspace/GPT_data/bpe/gpt2-vocab.json --merge-file /workspace/GPT_data/bpe/gpt2-merges.txt --data-impl mmap --split 949,50,1 --distributed-backend nccl --lr 1.5e-4 --lr-decay-style cosine --min-lr 1.0e-5 --weight-decay 1e-2 --clip-grad 1.0 --warmup 0.01 --checkpoint-activations --log-interval 1 --save-interval 10000 --eval-interval 2000 --eval-iters 10 --fp16 --cpu-optimizer --deepspeed --deepspeed_config /workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json --zero-stage 3 --zero-reduce-bucket-size 50000000 --zero-allgather-bucket-size 5000000000 --zero-contigious-gradients --zero-reduce-scatter --deepspeed-activation-checkpointing --checkpoint-num-layers 1 --partition-activations --synchronize-each-layer --contigious-checkpointing
+[2021-11-26 06:56:55,566] [INFO] [launch.py:73:main] 0 NCCL_VERSION=2.10.3
+[2021-11-26 06:56:55,566] [INFO] [launch.py:80:main] WORLD INFO DICT: {'localhost': [0]}
+[2021-11-26 06:56:55,566] [INFO] [launch.py:86:main] nnodes=1, num_local_procs=1, node_rank=0
+[2021-11-26 06:56:55,566] [INFO] [launch.py:99:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0]})
+[2021-11-26 06:56:55,566] [INFO] [launch.py:100:main] dist_world_size=1
+[2021-11-26 06:56:55,566] [INFO] [launch.py:102:main] Setting CUDA_VISIBLE_DEVICES=0
+using world size: 1 and model-parallel size: 1 
+using torch.float16 for parameters ...
+-------------------- arguments --------------------
+  adam_beta1 ...................... 0.9
+  adam_beta2 ...................... 0.999
+  adam_eps ........................ 1e-08
+  adlr_autoresume ................. False
+  adlr_autoresume_interval ........ 1000
+  apply_query_key_layer_scaling ... False
+  apply_residual_connection_post_layernorm  False
+  attention_dropout ............... 0.1
+  attention_softmax_in_fp32 ....... False
+  batch_size ...................... 32
+  bert_load ....................... None
+  bias_dropout_fusion ............. False
+  bias_gelu_fusion ................ False
+  block_data_path ................. None
+  checkpoint_activations .......... True
+  checkpoint_in_cpu ............... False
+  checkpoint_num_layers ........... 1
+  clip_grad ....................... 1.0
+  contigious_checkpointing ........ True
+  cpu_optimizer ................... True
+  cpu_torch_adam .................. False
+  data_impl ....................... mmap
+  data_path ....................... /workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document
+  DDP_impl ........................ local
+  deepscale ....................... False
+  deepscale_config ................ None
+  deepspeed ....................... True
+  deepspeed_activation_checkpointing  True
+  deepspeed_config ................ /workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json
+  deepspeed_mpi ................... False
+  distribute_checkpointed_activations  False
+  distributed_backend ............. nccl
+  dynamic_loss_scale .............. True
+  eod_mask_loss ................... False
+  eval_interval ................... 2000
+  eval_iters ...................... 10
+  exit_interval ................... None
+  faiss_use_gpu ................... False
+  finetune ........................ False
+  fp16 ............................ True
+  fp16_lm_cross_entropy ........... False
+  fp32_allreduce .................. False
+  hidden_dropout .................. 0.1
+  hidden_size ..................... 2048
+  hysteresis ...................... 2
+  ict_head_size ................... None
+  ict_load ........................ None
+  indexer_batch_size .............. 128
+  indexer_log_interval ............ 1000
+  init_method_std ................. 0.02
+  layernorm_epsilon ............... 1e-05
+  lazy_mpu_init ................... None
+  load ............................ checkpoints/gpt2_1B_ds
+  local_rank ...................... 0
+  log_interval .................... 1
+  loss_scale ...................... None
+  loss_scale_window ............... 1000
+  lr .............................. 0.00015
+  lr_decay_iters .................. 320000
+  lr_decay_style .................. cosine
+  lr_decay_tokens ................. None
+  make_vocab_size_divisible_by .... 128
+  mask_prob ....................... 0.15
+  max_position_embeddings ......... 1024
+  memory_centric_tiled_linear ..... False
+  merge_file ...................... /workspace/GPT_data/bpe/gpt2-merges.txt
+  min_lr .......................... 1e-05
+  min_scale ....................... 1
+  mmap_warmup ..................... False
+  model_parallel_size ............. 1
+  no_load_optim ................... False
+  no_load_rng ..................... False
+  no_save_optim ................... False
+  no_save_rng ..................... False
+  num_attention_heads ............. 16
+  num_layers ...................... 20
+  num_unique_layers ............... None
+  num_workers ..................... 2
+  onnx_safe ....................... None
+  openai_gelu ..................... False
+  override_lr_scheduler ........... False
+  param_sharing_style ............. grouped
+  params_dtype .................... torch.float16
+  partition_activations ........... True
+  profile_backward ................ False
+  query_in_block_prob ............. 0.1
+  rank ............................ 0
+  remote_device ................... none
+  report_topk_accuracies .......... []
+  reset_attention_mask ............ False
+  reset_position_ids .............. False
+  save ............................ checkpoints/gpt2_1B_ds
+  save_interval ................... 10000
+  scaled_masked_softmax_fusion .... False
+  scaled_upper_triang_masked_softmax_fusion  False
+  scattered_embeddings ............ False
+  seed ............................ 1234
+  seq_length ...................... 1024
+  short_seq_prob .................. 0.1
+  split ........................... 949,50,1
+  split_transformers .............. False
+  synchronize_each_layer .......... True
+  tensorboard_dir ................. None
+  tile_factor ..................... 1
+  titles_data_path ................ None
+  tokenizer_type .................. GPT2BPETokenizer
+  tokens .......................... 0
+  train_iters ..................... 32
+  train_tokens .................... None
+  use_checkpoint_lr_scheduler ..... False
+  use_cpu_initialization .......... False
+  use_one_sent_docs ............... False
+  use_pin_memory .................. False
+  vocab_file ...................... /workspace/GPT_data/bpe/gpt2-vocab.json
+  warmup .......................... 0.01
+  warmup_iters .................... None
+  weight_decay .................... 0.01
+  world_size ...................... 1
+  zero_allgather_bucket_size ...... 5000000000
+  zero_contigious_gradients ....... True
+  zero_reduce_bucket_size ......... 50000000
+  zero_reduce_scatter ............. True
+  zero_stage ...................... 3
+---------------- end of arguments ----------------
+> building GPT2BPETokenizer tokenizer ...
+ > padded vocab (size: 50257) with 47 dummy tokens (new size: 50304)
+> initializing torch distributed ...
+> initializing model parallel with size 1
+> setting random seeds to 1234 ...
+[2021-11-26 06:56:56,763] [INFO] [checkpointing.py:226:model_parallel_cuda_manual_seed] > initializing model parallel cuda seeds on global rank 0, model parallel rank 0, and data parallel rank 0 with model parallel seed: 3952 and data parallel seed: 1234
+building GPT2 model ...
+[2021-11-26 06:56:58,501] [INFO] [utils.py:822:see_memory_usage] Before Building Model
+[2021-11-26 06:56:58,502] [INFO] [utils.py:823:see_memory_usage] MA 0.0 GB         Max_MA 0.0 GB         CA 0.0 GB         Max_CA 0 GB 
+[2021-11-26 06:56:58,502] [INFO] [utils.py:831:see_memory_usage] CPU Virtual Memory:  used = 15.07 GB, percent = 1.5%
+[2021-11-26 06:56:58,502] [WARNING] [partition_parameters.py:457:__init__] zero.Init: the `config` argument is deprecated. Please use `config_dict_or_path` instead.
+[2021-11-26 06:56:58,990] [INFO] [utils.py:822:see_memory_usage] After Building Model
+[2021-11-26 06:56:58,991] [INFO] [utils.py:823:see_memory_usage] MA 2.07 GB         Max_MA 2.1 GB         CA 2.14 GB         Max_CA 2 GB 
+[2021-11-26 06:56:58,991] [INFO] [utils.py:831:see_memory_usage] CPU Virtual Memory:  used = 15.19 GB, percent = 1.5%
+ > number of parameters on model parallel rank 0            1.112 Billion
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Creating extension directory /root/.cache/torch_extensions/py38_cu114/cpu_adam...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /root/.cache/torch_extensions/py38_cu114/cpu_adam/build.ninja...
+Building extension module cpu_adam...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[1/3] /usr/local/cuda/bin/nvcc  -DTORCH_EXTENSION_NAME=cpu_adam -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1013\" -I/opt/conda/lib/python3.8/site-packages/deepspeed/ops/csrc/includes -I/usr/local/cuda/include -isystem /opt/conda/lib/python3.8/site-packages/torch/include -isystem /opt/conda/lib/python3.8/site-packages/torch/include/torch/csrc/api/include -isystem /opt/conda/lib/python3.8/site-packages/torch/include/TH -isystem /opt/conda/lib/python3.8/site-packages/torch/include/THC -isystem /usr/local/cuda/include -isystem /opt/conda/include/python3.8 -D_GLIBCXX_USE_CXX11_ABI=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_80,code=compute_80 -gencode=arch=compute_80,code=sm_80 --compiler-options '-fPIC' -O3 --use_fast_math -std=c++14 -U__CUDA_NO_HALF_OPERATORS__ -U__CUDA_NO_HALF_CONVERSIONS__ -U__CUDA_NO_HALF2_OPERATORS__ -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_80,code=compute_80 -c /opt/conda/lib/python3.8/site-packages/deepspeed/ops/csrc/common/custom_cuda_kernel.cu -o custom_cuda_kernel.cuda.o 
+[2/3] c++ -MMD -MF cpu_adam.o.d -DTORCH_EXTENSION_NAME=cpu_adam -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1013\" -I/opt/conda/lib/python3.8/site-packages/deepspeed/ops/csrc/includes -I/usr/local/cuda/include -isystem /opt/conda/lib/python3.8/site-packages/torch/include -isystem /opt/conda/lib/python3.8/site-packages/torch/include/torch/csrc/api/include -isystem /opt/conda/lib/python3.8/site-packages/torch/include/TH -isystem /opt/conda/lib/python3.8/site-packages/torch/include/THC -isystem /usr/local/cuda/include -isystem /opt/conda/include/python3.8 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++14 -O3 -std=c++14 -L/usr/local/cuda/lib64 -lcudart -lcublas -g -Wno-reorder -march=native -fopenmp -D__AVX256__ -c /opt/conda/lib/python3.8/site-packages/deepspeed/ops/csrc/adam/cpu_adam.cpp -o cpu_adam.o 
+[3/3] c++ cpu_adam.o custom_cuda_kernel.cuda.o -shared -L/opt/conda/lib/python3.8/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o cpu_adam.so
+Loading extension module cpu_adam...
+Time to load cpu_adam op: 22.727433443069458 seconds
+Adam Optimizer #0 is created with AVX2 arithmetic capability.
+Config: alpha=0.000150, betas=(0.900000, 0.999000), weight_decay=0.010000, adam_w=1
+> learning rate decay style: cosine
+DeepSpeed is enabled.
+[2021-11-26 06:57:22,927] [INFO] [logging.py:69:log_dist] [Rank 0] DeepSpeed info: version=0.5.8+51d42ab, git-hash=51d42ab, git-branch=master
+[2021-11-26 06:57:22,934] [INFO] [logging.py:69:log_dist] [Rank 0] initializing deepspeed groups using mpu
+[2021-11-26 06:57:22,934] [INFO] [logging.py:69:log_dist] [Rank 0] Initializing deepspeed groups with model parallel size 1, expert parallel size 1, and data parallel size 1
+[2021-11-26 06:57:22,935] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert data parallel process group with ranks: [0]
+[2021-11-26 06:57:22,935] [INFO] [logging.py:69:log_dist] [Rank 0] creating expert parallel process group with ranks: [0]
+[2021-11-26 06:57:22,937] [INFO] [engine.py:277:__init__] DeepSpeed Flops Profiler Enabled: False
+[2021-11-26 06:57:22,937] [INFO] [engine.py:1084:_configure_optimizer] Removing param_group that has no 'params' in the client Optimizer
+[2021-11-26 06:57:22,937] [INFO] [engine.py:1090:_configure_optimizer] Using client Optimizer as basic optimizer
+[2021-11-26 06:57:22,946] [INFO] [engine.py:1106:_configure_optimizer] DeepSpeed Basic Optimizer = DeepSpeedCPUAdam
+[2021-11-26 06:57:22,946] [INFO] [utils.py:43:is_zero_supported_optimizer] Checking ZeRO support for optimizer=DeepSpeedCPUAdam type=<class 'deepspeed.ops.adam.cpu_adam.DeepSpeedCPUAdam'>
+[2021-11-26 06:57:22,946] [INFO] [logging.py:69:log_dist] [Rank 0] Creating fp16 ZeRO stage 3 optimizer
+Initializing ZeRO Stage 3
+[2021-11-26 06:57:22,948] [INFO] [stage3.py:639:__init__] Reduce bucket size 10000000.0
+[2021-11-26 06:57:22,948] [INFO] [stage3.py:640:__init__] Allgather bucket size 10000000.0
+Using /root/.cache/torch_extensions/py38_cu114 as PyTorch extensions root...
+Emitting ninja build file /root/.cache/torch_extensions/py38_cu114/utils/build.ninja...
+Building extension module utils...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module utils...
+Time to load utils op: 0.19273829460144043 seconds
+[1637909844.706015] [f4fbba933b8d:5175 :0]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 8 was not set in ucs
+[f4fbba933b8d:5175 :1:5323] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13a3000600)
+[1637909844.706137] [f4fbba933b8d:5175 :0]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706141] [f4fbba933b8d:5175 :2]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[1637909844.706056] [f4fbba933b8d:5175 :1]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[f4fbba933b8d:5175 :2:5380] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b6000a00)
+[1637909844.706181] [f4fbba933b8d:5175 :2]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706180] [f4fbba933b8d:5175 :3]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 1 was not set in ucs
+[f4fbba933b8d:5175 :3:5324] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13a3555c00)
+[f4fbba933b8d:5175 :0:5175] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13a0000000)
+[1637909844.706296] [f4fbba933b8d:5175 :0]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706293] [f4fbba933b8d:5175 :4]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 1 was not set in ucs
+[1637909844.706309] [f4fbba933b8d:5175 :4]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[f4fbba933b8d:5175 :4:5325] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13a3aab200)
+[1637909844.706318] [f4fbba933b8d:5175 :4]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706331] [f4fbba933b8d:5175 :3]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706320] [f4fbba933b8d:5175 :5]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[1637909844.706502] [f4fbba933b8d:5175 :5]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706507] [f4fbba933b8d:5175 :6]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[f4fbba933b8d:5175 :5:5390] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b9555c00)
+[1637909844.706520] [f4fbba933b8d:5175 :5]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[f4fbba933b8d:5175 :6:5401] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13bd000300)
+[1637909844.706524] [f4fbba933b8d:5175 :6]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706531] [f4fbba933b8d:5175 :7]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 4 was not set in ucs
+[1637909844.706697] [f4fbba933b8d:5175 :7]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706701] [f4fbba933b8d:5175 :8]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 4 was not set in ucs
+[1637909844.706878] [f4fbba933b8d:5175 :9]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 4 was not set in ucs
+[f4fbba933b8d:5175 :7:5376] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b4aab600)
+[f4fbba933b8d:5175 :8:5362] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b0001000)
+[1637909844.706892] [f4fbba933b8d:5175 :7]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706960] [f4fbba933b8d:5175 :10]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 4 was not set in ucs
+[f4fbba933b8d:5175 :10:5377] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b5000b00)
+[1637909844.706973] [f4fbba933b8d:5175 :10]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706893] [f4fbba933b8d:5175 :8]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[f4fbba933b8d:5175 :9:5373] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b3aab700)
+[1637909844.707058] [f4fbba933b8d:5175 :9]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.706972] [f4fbba933b8d:5175 :11]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 4 was not set in ucs
+[f4fbba933b8d:5175 :11:5374] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b4000c00)
+[1637909844.707070] [f4fbba933b8d:5175 :11]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.707149] [f4fbba933b8d:5175 :12]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 4 was not set in ucs
+[1637909844.707166] [f4fbba933b8d:5175 :12]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[f4fbba933b8d:5175 :12:5370] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b2aab800)
+[1637909844.707169] [f4fbba933b8d:5175 :13]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 4 was not set in ucs
+[1637909844.707175] [f4fbba933b8d:5175 :12]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[f4fbba933b8d:5175 :13:5364] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b0aaba00)
+[1637909844.707251] [f4fbba933b8d:5175 :13]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.707383] [f4fbba933b8d:5175 :14]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[f4fbba933b8d:5175 :14:5391] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b9aab100)
+[1637909844.707402] [f4fbba933b8d:5175 :14]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.707398] [f4fbba933b8d:5175 :15]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 4 was not set in ucs
+[f4fbba933b8d:5175 :15:5371] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b3000d00)
+[1637909844.707412] [f4fbba933b8d:5175 :15]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.707556] [f4fbba933b8d:5175 :16]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[f4fbba933b8d:5175 :16:5326] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13a4000800)
+[1637909844.707572] [f4fbba933b8d:5175 :16]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.707573] [f4fbba933b8d:5175 :17]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[f4fbba933b8d:5175 :17:5336] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13a7556400)
+[1637909844.707654] [f4fbba933b8d:5175 :17]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.707663] [f4fbba933b8d:5175 :18]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[1637909844.707693] [f4fbba933b8d:5175 :19]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[f4fbba933b8d:5175 :18:5381] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b6555f00)
+[1637909844.707703] [f4fbba933b8d:5175 :18]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[f4fbba933b8d:5175 :19:5334] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13a6aab800)
+[1637909844.707710] [f4fbba933b8d:5175 :19]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.707710] [f4fbba933b8d:5175 :20]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[f4fbba933b8d:5175 :20:5402] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13bd555800)
+[1637909844.707821] [f4fbba933b8d:5175 :21]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[f4fbba933b8d:5175 :21:5382] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b6aab400)
+[1637909844.707833] [f4fbba933b8d:5175 :21]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.707834] [f4fbba933b8d:5175 :22]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[1637909844.707850] [f4fbba933b8d:5175 :20]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[1637909844.707947] [f4fbba933b8d:5175 :23]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+[f4fbba933b8d:5175 :22:5338] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13a8001000)
+[1637909844.708029] [f4fbba933b8d:5175 :22]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[f4fbba933b8d:5175 :23:5385] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b7aab300)
+[1637909844.708038] [f4fbba933b8d:5175 :23]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+==== backtrace (tid:   5376) ====
+ 0  /opt/hpcx/ucx/lib/libucs.so.0(ucs_handle_error+0x2a4) [0x7f1e2421b824]
+ 1  /opt/hpcx/ucx/lib/libucs.so.0(+0x2b9ff) [0x7f1e2421b9ff]
+ 2  /opt/hpcx/ucx/lib/libucs.so.0(+0x2bd34) [0x7f1e2421bd34]
+ 3  /usr/lib/x86_64-linux-gnu/libpthread.so.0(+0x153c0) [0x7f1ef3f533c0]
+[1637909844.708032] [f4fbba933b8d:5175 :24]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+ 4  /root/.cache/torch_extensions/py38_cu114/cpu_adam/cpu_adam.so(+0xfb20) [0x7f1e12d34b20]
+ 5  /opt/conda/lib/libgomp.so.1(GOMP_parallel+0x98) [0x7f1ec7eaab08]
+ 6  /root/.cache/torch_extensions/py38_cu114/cpu_adam/cpu_adam.so(+0xf897) [0x7f1e12d34897]
+ 7  /opt/conda/lib/libgomp.so.1(+0x8d978) [0x7f1ec7ea4978]
+ 8  /opt/conda/lib/libgomp.so.1(__kmp_invoke_microtask+0x93) [0x7f1ec7eb9e83]
+ 9  /opt/conda/lib/libgomp.so.1(+0x40ced) [0x7f1ec7e57ced]
+10  /opt/conda/lib/libgomp.so.1(+0x3f91a) [0x7f1ec7e5691a]
+11  /opt/conda/lib/libgomp.so.1(+0x8c232) [0x7f1ec7ea3232]
+[f4fbba933b8d:5175 :24:5379] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13b5aab500)
+12  /usr/lib/x86_64-linux-gnu/libpthread.so.0(+0x9609) [0x7f1ef3f47609]
+[1637909844.708171] [f4fbba933b8d:5175 :25]           debug.c:1376 UCX  WARN  ucs_debug_disable_signal: signal 11 was not set in ucs
+13  /usr/lib/x86_64-linux-gnu/libc.so.6(clone+0x43) [0x7f1ef3d09293]
+=================================
+[1637909844.708175] [f4fbba933b8d:5175 :24]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[f4fbba933b8d:5175 :25:5330] Caught signal 11 (Segmentation fault: invalid permissions for mapped object at address 0x7f13a5556000)
+[1637909844.708191] [f4fbba933b8d:5175 :25]        spinlock.c:29   UCX  WARN  ucs_recursive_spinlock_destroy() failed: busy
+[2021-11-26 06:57:35,615] [INFO] [launch.py:131:sigkill_handler] Killing subprocess 5175
+[2021-11-26 06:57:35,615] [ERROR] [launch.py:137:sigkill_handler] ['/opt/conda/bin/python3.8', '-u', 'pretrain_gpt2.py', '--local_rank=0', '--model-parallel-size', '8', '--num-layers', '20', '--hidden-size', '2048', '--num-attention-heads', '16', '--seq-length', '1024', '--max-position-embeddings', '1024', '--batch-size', '32', '--train-iters', '32', '--lr-decay-iters', '320000', '--save', 'checkpoints/gpt2_1B_ds', '--load', 'checkpoints/gpt2_1B_ds', '--data-path', '/workspace/GPT_data/gpt2_bin_data/my-gpt2_text_document', '--vocab-file', '/workspace/GPT_data/bpe/gpt2-vocab.json', '--merge-file', '/workspace/GPT_data/bpe/gpt2-merges.txt', '--data-impl', 'mmap', '--split', '949,50,1', '--distributed-backend', 'nccl', '--lr', '1.5e-4', '--lr-decay-style', 'cosine', '--min-lr', '1.0e-5', '--weight-decay', '1e-2', '--clip-grad', '1.0', '--warmup', '0.01', '--checkpoint-activations', '--log-interval', '1', '--save-interval', '10000', '--eval-interval', '2000', '--eval-iters', '10', '--fp16', '--cpu-optimizer', '--deepspeed', '--deepspeed_config', '/workspace/DeepSpeed/DeepSpeedExamples/Megatron-LM-v1.1.5-ZeRO3/examples/ds_zero_stage_3_config.json', '--zero-stage', '3', '--zero-reduce-bucket-size', '50000000', '--zero-allgather-bucket-size', '5000000000', '--zero-contigious-gradients', '--zero-reduce-scatter', '--deepspeed-activation-checkpointing', '--checkpoint-num-layers', '1', '--partition-activations', '--synchronize-each-layer', '--contigious-checkpointing'] exits with return code = -11
