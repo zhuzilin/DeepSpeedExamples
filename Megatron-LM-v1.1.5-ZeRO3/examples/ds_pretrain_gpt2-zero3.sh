@@ -93,7 +93,7 @@ agbs=5000000000
 #Activation Checkpointing and Contigious Memory
 chkp_layers=1
 PA=true
-PA_CPU=true
+PA_CPU=false
 CC=true
 SYNCHRONIZE=true
 PROFILE=false
